@@ -1,0 +1,8 @@
+{
+"name": "BaalReturn",
+"version": "0.0.1",
+"dependencies": {
+  "taminahx": ">=1.0.0",
+  "haxe": ">=1.0.0"
+  }
+}
