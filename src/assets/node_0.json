@@ -1,0 +1,16 @@
+{
+  "index":0,
+  "_text":"Node 1 qui est chargé ! C'est cool",
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"La premier choix",
+      "_targetNodeId":1
+    },
+    {
+      "index":1,
+      "_text":"Le second choix",
+      "_targetNodeId":null
+    }
+  ]
+}

@@ -99,6 +99,9 @@ Reflect.compareMethods = function(f1,f2) {
 var Std = function() { };
 $hxClasses["Std"] = Std;
 Std.__name__ = ["Std"];
+Std.string = function(s) {
+	return js_Boot.__string_rec(s,"");
+};
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
@@ -227,23 +230,39 @@ fr_thanadev_baalreturn_classes_Action.__name__ = ["fr","thanadev","baalreturn","
 fr_thanadev_baalreturn_classes_Action.prototype = {
 	__class__: fr_thanadev_baalreturn_classes_Action
 };
-var fr_thanadev_baalreturn_classes_Decision = function(text,targetNode) {
+var fr_thanadev_baalreturn_classes_Decision = function(text,targetNodeId) {
 	this._text = text;
 	this._actions = [];
-	this._targetNode = targetNode;
+	this._targetNodeId = targetNodeId;
 	this.decisionChosen = new msignal_Signal1();
 };
 $hxClasses["fr.thanadev.baalreturn.classes.Decision"] = fr_thanadev_baalreturn_classes_Decision;
 fr_thanadev_baalreturn_classes_Decision.__name__ = ["fr","thanadev","baalreturn","classes","Decision"];
+fr_thanadev_baalreturn_classes_Decision.fromJson = function(json) {
+	var parsed = JSON.parse(json);
+	var decision = new fr_thanadev_baalreturn_classes_Decision(parsed._text,parsed._targetNodeId);
+	return decision;
+};
+fr_thanadev_baalreturn_classes_Decision.fromDynamic = function(parsed) {
+	console.log("Decision : " + Std.string(parsed));
+	var decision = new fr_thanadev_baalreturn_classes_Decision(parsed._text,parsed._targetNodeId);
+	return decision;
+};
 fr_thanadev_baalreturn_classes_Decision.prototype = {
 	run: function() {
-		this.decisionChosen.dispatch(this._targetNode);
+		this.decisionChosen.dispatch(this.get__targetNodeId());
 	}
 	,get__text: function() {
 		return this._text;
 	}
 	,get__actions: function() {
 		return this._actions;
+	}
+	,get__targetNode: function() {
+		return this._targetNode;
+	}
+	,get__targetNodeId: function() {
+		return this._targetNodeId;
 	}
 	,__class__: fr_thanadev_baalreturn_classes_Decision
 };
@@ -257,6 +276,20 @@ var fr_thanadev_baalreturn_classes_Node = function(index,text) {
 };
 $hxClasses["fr.thanadev.baalreturn.classes.Node"] = fr_thanadev_baalreturn_classes_Node;
 fr_thanadev_baalreturn_classes_Node.__name__ = ["fr","thanadev","baalreturn","classes","Node"];
+fr_thanadev_baalreturn_classes_Node.fromJson = function(json) {
+	var parsed = JSON.parse(json);
+	var node = new fr_thanadev_baalreturn_classes_Node(parsed.index,parsed._text);
+	var _g1 = 0;
+	var _g = parsed._decisions.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var array;
+		array = js_Boot.__cast(parsed._decisions , Array);
+		var parsedDecision = fr_thanadev_baalreturn_classes_Decision.fromDynamic(array[i]);
+		node.addDecision(parsedDecision);
+	}
+	return node;
+};
 fr_thanadev_baalreturn_classes_Node.prototype = {
 	addDecision: function(decision) {
 		this.get__decisions().push(decision);
@@ -264,8 +297,8 @@ fr_thanadev_baalreturn_classes_Node.prototype = {
 		decision.decisionChosen.add($bind(this,this.decisionChosenHandler));
 		this.modelUpdatedSignal.dispatch();
 	}
-	,decisionChosenHandler: function(targetNode) {
-		this.nextNodeChosen.dispatch(targetNode);
+	,decisionChosenHandler: function(targetNodeId) {
+		this.nextNodeChosen.dispatch(targetNodeId);
 	}
 	,get__decisions: function() {
 		return this._decisions;
@@ -277,6 +310,31 @@ fr_thanadev_baalreturn_classes_Node.prototype = {
 		return this._text;
 	}
 	,__class__: fr_thanadev_baalreturn_classes_Node
+};
+var fr_thanadev_baalreturn_dao_ModelLoaderDao = function() {
+};
+$hxClasses["fr.thanadev.baalreturn.dao.ModelLoaderDao"] = fr_thanadev_baalreturn_dao_ModelLoaderDao;
+fr_thanadev_baalreturn_dao_ModelLoaderDao.__name__ = ["fr","thanadev","baalreturn","dao","ModelLoaderDao"];
+fr_thanadev_baalreturn_dao_ModelLoaderDao.getInstance = function() {
+	if(fr_thanadev_baalreturn_dao_ModelLoaderDao._instance == null) fr_thanadev_baalreturn_dao_ModelLoaderDao._instance = new fr_thanadev_baalreturn_dao_ModelLoaderDao();
+	return fr_thanadev_baalreturn_dao_ModelLoaderDao._instance;
+};
+fr_thanadev_baalreturn_dao_ModelLoaderDao.prototype = {
+	loadNode: function(nodeIndex,callback) {
+		var node;
+		var request = new XMLHttpRequest();
+		request.open("GET","assets/node_" + (nodeIndex == null?"null":"" + nodeIndex) + ".json",true);
+		request.onload = function(e) {
+			console.log("UIUIUI");
+			node = fr_thanadev_baalreturn_classes_Node.fromJson(StringTools.trim(request.response));
+			callback(node);
+		};
+		request.onerror = function(e1) {
+			console.log("Error : Could not find json file : nose_" + (nodeIndex == null?"null":"" + nodeIndex) + ".json");
+		};
+		request.send();
+	}
+	,__class__: fr_thanadev_baalreturn_dao_ModelLoaderDao
 };
 var org_tamina_html_component_HTMLComponent = function() {
 	this._skinPartsAttached = false;
@@ -433,8 +491,14 @@ fr_thanadev_baalreturn_views_MainView.__super__ = org_tamina_html_component_HTML
 fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_component_HTMLComponent.prototype,{
 	createdCallback: function() {
 		org_tamina_html_component_HTMLComponent.prototype.createdCallback.call(this);
-		this._currentNode = 0;
+		this._currentNode = -1;
+		this._loader = fr_thanadev_baalreturn_dao_ModelLoaderDao.getInstance();
 		this.initNodes();
+	}
+	,nodeLoadedHandler: function(node) {
+		node.nextNodeChosen.add($bind(this,this.loadNode));
+		this._nodes.push(node);
+		this._currentNode++;
 		if(this._skinPartsAttached) this.skinTimeoutHandler(); else {
 			console.log("Waiting for skinparts to be attached");
 			window.setTimeout($bind(this,this.skinTimeoutHandler),1);
@@ -442,20 +506,15 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 	}
 	,initNodes: function() {
 		this._nodes = [];
-		this._nodes.push(new fr_thanadev_baalreturn_classes_Node(0,"Node 1"));
-		this._nodes.push(new fr_thanadev_baalreturn_classes_Node(1,"Node 2"));
-		var decision = new fr_thanadev_baalreturn_classes_Decision("Choice 1",this._nodes[1]);
-		decision.decisionChosen.add($bind(this,this.loadNode));
-		this._nodes[0].addDecision(decision);
+		this.loadNode(0);
 	}
 	,skinTimeoutHandler: function() {
 		this._nodeView.setModel(this._nodes[this._currentNode]);
 	}
-	,changeNode: function(targetNode) {
-	}
-	,loadNode: function(node) {
-		console.log("nodeIndex asked" + node.index);
-		if(node.index > 0 && node.index < this._nodes.length) this._nodeView.setModel(this._nodes[node.index]);
+	,loadNode: function(nodeIndex) {
+		if(nodeIndex == null) nodeIndex = -1;
+		console.log("nodeIndex asked : " + nodeIndex);
+		this._loader.loadNode(nodeIndex,$bind(this,this.nodeLoadedHandler));
 	}
 	,getView: function() {
 		return "<fr-thanadev-baalreturn-views-nodeview data-id=\"_nodeView\"></fr-thanadev-baalreturn-views-nodeview>";
@@ -707,6 +766,9 @@ js_Boot.__instanceof = function(o,cl) {
 		if(cl == Enum && o.__ename__ != null) return true;
 		return o.__enum__ == cl;
 	}
+};
+js_Boot.__cast = function(o,t) {
+	if(js_Boot.__instanceof(o,t)) return o; else throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
 };
 js_Boot.__nativeClassName = function(o) {
 	var name = js_Boot.__toStr.call(o).slice(8,-1);

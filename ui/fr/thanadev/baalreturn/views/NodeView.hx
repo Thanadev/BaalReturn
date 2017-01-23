@@ -52,7 +52,6 @@ class NodeView extends HTMLComponent {
 
         id = id.split('_')[1];
         _model._decisions[Std.parseInt(id)].run();
-        //requestNode.dispatch(Std.parseInt(id));
     }
 
     public function updateView():Void {
