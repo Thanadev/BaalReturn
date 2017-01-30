@@ -2,5 +2,11 @@
   "index":1,
   "_text":"Node 2 mec",
   "_decisions":[
+  ],
+  "_actions":[
+    {
+      "_target":"player",
+      "_damages":10
+    }
   ]
 }

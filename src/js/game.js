@@ -223,12 +223,32 @@ fr_thanadev_baalreturn_Main.__super__ = org_tamina_html_component_HTMLApplicatio
 fr_thanadev_baalreturn_Main.prototype = $extend(org_tamina_html_component_HTMLApplication.prototype,{
 	__class__: fr_thanadev_baalreturn_Main
 });
-var fr_thanadev_baalreturn_classes_Action = function() {
+var fr_thanadev_baalreturn_classes_Damageable = function(name,health) {
+	this.deathSignal = new msignal_Signal0();
+	this.modelUpdatedSignal = new msignal_Signal0();
+	this.name = name;
+	this.health = health;
 };
-$hxClasses["fr.thanadev.baalreturn.classes.Action"] = fr_thanadev_baalreturn_classes_Action;
-fr_thanadev_baalreturn_classes_Action.__name__ = ["fr","thanadev","baalreturn","classes","Action"];
-fr_thanadev_baalreturn_classes_Action.prototype = {
-	__class__: fr_thanadev_baalreturn_classes_Action
+$hxClasses["fr.thanadev.baalreturn.classes.Damageable"] = fr_thanadev_baalreturn_classes_Damageable;
+fr_thanadev_baalreturn_classes_Damageable.__name__ = ["fr","thanadev","baalreturn","classes","Damageable"];
+fr_thanadev_baalreturn_classes_Damageable.prototype = {
+	takeDamages: function(damages) {
+		this.health -= damages;
+		if(this.get_health() <= 0) {
+			this.health = 0;
+			this.die();
+		} else this.modelUpdatedSignal.dispatch();
+	}
+	,die: function() {
+		this.deathSignal.dispatch();
+	}
+	,get_health: function() {
+		return this.health;
+	}
+	,get_name: function() {
+		return this.name;
+	}
+	,__class__: fr_thanadev_baalreturn_classes_Damageable
 };
 var fr_thanadev_baalreturn_classes_Decision = function(text,targetNodeId) {
 	this._text = text;
@@ -244,13 +264,28 @@ fr_thanadev_baalreturn_classes_Decision.fromJson = function(json) {
 	return decision;
 };
 fr_thanadev_baalreturn_classes_Decision.fromDynamic = function(parsed) {
-	console.log("Decision : " + Std.string(parsed));
 	var decision = new fr_thanadev_baalreturn_classes_Decision(parsed._text,parsed._targetNodeId);
+	var _g1 = 0;
+	var _g = parsed._actions.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		decision.addAction(fr_thanadev_baalreturn_classes_actions_Action.fromDynamic(parsed._actions[i]));
+	}
 	return decision;
 };
 fr_thanadev_baalreturn_classes_Decision.prototype = {
 	run: function() {
-		this.decisionChosen.dispatch(this.get__targetNodeId());
+		var _g = 0;
+		var _g1 = this.get__actions();
+		while(_g < _g1.length) {
+			var action = _g1[_g];
+			++_g;
+			action.run();
+		}
+		if(this.get__targetNodeId() > 0) this.decisionChosen.dispatch(this.get__targetNodeId());
+	}
+	,addAction: function(action) {
+		this.get__actions().push(action);
 	}
 	,get__text: function() {
 		return this._text;
@@ -288,13 +323,35 @@ fr_thanadev_baalreturn_classes_Node.fromJson = function(json) {
 		var parsedDecision = fr_thanadev_baalreturn_classes_Decision.fromDynamic(array[i]);
 		node.addDecision(parsedDecision);
 	}
+	var _g11 = 0;
+	var _g2 = parsed._actions.length;
+	while(_g11 < _g2) {
+		var i1 = _g11++;
+		var array1;
+		array1 = js_Boot.__cast(parsed._actions , Array);
+		var parsedAction = fr_thanadev_baalreturn_classes_actions_Action.fromDynamic(array1[i1]);
+		node.addAction(parsedAction);
+	}
 	return node;
 };
 fr_thanadev_baalreturn_classes_Node.prototype = {
-	addDecision: function(decision) {
+	run: function() {
+		var _g = 0;
+		var _g1 = this.get__actions();
+		while(_g < _g1.length) {
+			var action = _g1[_g];
+			++_g;
+			action.run();
+		}
+	}
+	,addDecision: function(decision) {
 		this.get__decisions().push(decision);
 		decision.index = this.get__decisions().length - 1;
 		decision.decisionChosen.add($bind(this,this.decisionChosenHandler));
+		this.modelUpdatedSignal.dispatch();
+	}
+	,addAction: function(action) {
+		this.get__actions().push(action);
 		this.modelUpdatedSignal.dispatch();
 	}
 	,decisionChosenHandler: function(targetNodeId) {
@@ -311,21 +368,74 @@ fr_thanadev_baalreturn_classes_Node.prototype = {
 	}
 	,__class__: fr_thanadev_baalreturn_classes_Node
 };
-var fr_thanadev_baalreturn_dao_ModelLoaderDao = function() {
+var fr_thanadev_baalreturn_classes_Player = function(name,health) {
+	fr_thanadev_baalreturn_classes_Damageable.call(this,name,health);
 };
-$hxClasses["fr.thanadev.baalreturn.dao.ModelLoaderDao"] = fr_thanadev_baalreturn_dao_ModelLoaderDao;
-fr_thanadev_baalreturn_dao_ModelLoaderDao.__name__ = ["fr","thanadev","baalreturn","dao","ModelLoaderDao"];
-fr_thanadev_baalreturn_dao_ModelLoaderDao.getInstance = function() {
-	if(fr_thanadev_baalreturn_dao_ModelLoaderDao._instance == null) fr_thanadev_baalreturn_dao_ModelLoaderDao._instance = new fr_thanadev_baalreturn_dao_ModelLoaderDao();
-	return fr_thanadev_baalreturn_dao_ModelLoaderDao._instance;
+$hxClasses["fr.thanadev.baalreturn.classes.Player"] = fr_thanadev_baalreturn_classes_Player;
+fr_thanadev_baalreturn_classes_Player.__name__ = ["fr","thanadev","baalreturn","classes","Player"];
+fr_thanadev_baalreturn_classes_Player.__super__ = fr_thanadev_baalreturn_classes_Damageable;
+fr_thanadev_baalreturn_classes_Player.prototype = $extend(fr_thanadev_baalreturn_classes_Damageable.prototype,{
+	__class__: fr_thanadev_baalreturn_classes_Player
+});
+var fr_thanadev_baalreturn_classes_actions_Action = function(target) {
+	this.requestCurrentPlayer = new msignal_Signal0();
+	this.requestCurrentEnemy = new msignal_Signal0();
+	this.set__target(target);
 };
-fr_thanadev_baalreturn_dao_ModelLoaderDao.prototype = {
+$hxClasses["fr.thanadev.baalreturn.classes.actions.Action"] = fr_thanadev_baalreturn_classes_actions_Action;
+fr_thanadev_baalreturn_classes_actions_Action.__name__ = ["fr","thanadev","baalreturn","classes","actions","Action"];
+fr_thanadev_baalreturn_classes_actions_Action.fromDynamic = function(parsed) {
+	var action;
+	if(Object.prototype.hasOwnProperty.call(parsed,"_damages")) action = new fr_thanadev_baalreturn_classes_actions_DamageAction(parsed._target,parsed._damages); else action = new fr_thanadev_baalreturn_classes_actions_Action(parsed._target);
+	return action;
+};
+fr_thanadev_baalreturn_classes_actions_Action.prototype = {
+	run: function() {
+	}
+	,set__target: function(value) {
+		return this._target = value;
+	}
+	,get__target: function() {
+		return this._target;
+	}
+	,__class__: fr_thanadev_baalreturn_classes_actions_Action
+};
+var fr_thanadev_baalreturn_classes_actions_ActionTarget = function() { };
+$hxClasses["fr.thanadev.baalreturn.classes.actions.ActionTarget"] = fr_thanadev_baalreturn_classes_actions_ActionTarget;
+fr_thanadev_baalreturn_classes_actions_ActionTarget.__name__ = ["fr","thanadev","baalreturn","classes","actions","ActionTarget"];
+var fr_thanadev_baalreturn_classes_actions_DamageAction = function(target,damages) {
+	fr_thanadev_baalreturn_classes_actions_Action.call(this,target);
+	this.set__damages(damages);
+};
+$hxClasses["fr.thanadev.baalreturn.classes.actions.DamageAction"] = fr_thanadev_baalreturn_classes_actions_DamageAction;
+fr_thanadev_baalreturn_classes_actions_DamageAction.__name__ = ["fr","thanadev","baalreturn","classes","actions","DamageAction"];
+fr_thanadev_baalreturn_classes_actions_DamageAction.__super__ = fr_thanadev_baalreturn_classes_actions_Action;
+fr_thanadev_baalreturn_classes_actions_DamageAction.prototype = $extend(fr_thanadev_baalreturn_classes_actions_Action.prototype,{
+	run: function() {
+		if(this.get__target() == "player") fr_thanadev_baalreturn_services_PlayerService.getPlayer().takeDamages(this.get__damages());
+	}
+	,set__damages: function(value) {
+		return this._damages = value;
+	}
+	,get__damages: function() {
+		return this._damages;
+	}
+	,__class__: fr_thanadev_baalreturn_classes_actions_DamageAction
+});
+var fr_thanadev_baalreturn_dao_NodeDao = function() {
+};
+$hxClasses["fr.thanadev.baalreturn.dao.NodeDao"] = fr_thanadev_baalreturn_dao_NodeDao;
+fr_thanadev_baalreturn_dao_NodeDao.__name__ = ["fr","thanadev","baalreturn","dao","NodeDao"];
+fr_thanadev_baalreturn_dao_NodeDao.getInstance = function() {
+	if(fr_thanadev_baalreturn_dao_NodeDao._instance == null) fr_thanadev_baalreturn_dao_NodeDao._instance = new fr_thanadev_baalreturn_dao_NodeDao();
+	return fr_thanadev_baalreturn_dao_NodeDao._instance;
+};
+fr_thanadev_baalreturn_dao_NodeDao.prototype = {
 	loadNode: function(nodeIndex,callback) {
 		var node;
 		var request = new XMLHttpRequest();
 		request.open("GET","assets/node_" + (nodeIndex == null?"null":"" + nodeIndex) + ".json",true);
 		request.onload = function(e) {
-			console.log("UIUIUI");
 			node = fr_thanadev_baalreturn_classes_Node.fromJson(StringTools.trim(request.response));
 			callback(node);
 		};
@@ -334,7 +444,27 @@ fr_thanadev_baalreturn_dao_ModelLoaderDao.prototype = {
 		};
 		request.send();
 	}
-	,__class__: fr_thanadev_baalreturn_dao_ModelLoaderDao
+	,__class__: fr_thanadev_baalreturn_dao_NodeDao
+};
+var fr_thanadev_baalreturn_services_PlayerService = function(playerName,playerHealth) {
+	this._player = new fr_thanadev_baalreturn_classes_Player(playerName,playerHealth);
+};
+$hxClasses["fr.thanadev.baalreturn.services.PlayerService"] = fr_thanadev_baalreturn_services_PlayerService;
+fr_thanadev_baalreturn_services_PlayerService.__name__ = ["fr","thanadev","baalreturn","services","PlayerService"];
+fr_thanadev_baalreturn_services_PlayerService.getInstance = function(playerName,playerHealth) {
+	if(playerHealth == null) playerHealth = 100;
+	if(playerName == null) playerName = "hero";
+	if(fr_thanadev_baalreturn_services_PlayerService._instance == null) fr_thanadev_baalreturn_services_PlayerService._instance = new fr_thanadev_baalreturn_services_PlayerService(playerName,playerHealth);
+	return fr_thanadev_baalreturn_services_PlayerService._instance;
+};
+fr_thanadev_baalreturn_services_PlayerService.getPlayer = function() {
+	return fr_thanadev_baalreturn_services_PlayerService._instance.get__player();
+};
+fr_thanadev_baalreturn_services_PlayerService.prototype = {
+	get__player: function() {
+		return this._player;
+	}
+	,__class__: fr_thanadev_baalreturn_services_PlayerService
 };
 var org_tamina_html_component_HTMLComponent = function() {
 	this._skinPartsAttached = false;
@@ -492,7 +622,8 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 	createdCallback: function() {
 		org_tamina_html_component_HTMLComponent.prototype.createdCallback.call(this);
 		this._currentNode = -1;
-		this._loader = fr_thanadev_baalreturn_dao_ModelLoaderDao.getInstance();
+		fr_thanadev_baalreturn_services_PlayerService.getInstance("The new hero",100);
+		this._loader = fr_thanadev_baalreturn_dao_NodeDao.getInstance();
 		this.initNodes();
 	}
 	,nodeLoadedHandler: function(node) {
@@ -510,18 +641,19 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 	}
 	,skinTimeoutHandler: function() {
 		this._nodeView.setModel(this._nodes[this._currentNode]);
+		this._playerView.setModel(fr_thanadev_baalreturn_services_PlayerService.getPlayer());
 	}
 	,loadNode: function(nodeIndex) {
 		if(nodeIndex == null) nodeIndex = -1;
-		console.log("nodeIndex asked : " + nodeIndex);
 		this._loader.loadNode(nodeIndex,$bind(this,this.nodeLoadedHandler));
 	}
 	,getView: function() {
-		return "<fr-thanadev-baalreturn-views-nodeview data-id=\"_nodeView\"></fr-thanadev-baalreturn-views-nodeview>";
+		return "<fr-thanadev-baalreturn-views-playerview data-id=\"_playerView\"></fr-thanadev-baalreturn-views-playerview>\r\n<fr-thanadev-baalreturn-views-nodeview data-id=\"_nodeView\"></fr-thanadev-baalreturn-views-nodeview>";
 	}
 	,__class__: fr_thanadev_baalreturn_views_MainView
 });
 var fr_thanadev_baalreturn_views_NodeView = function() {
+	this._decisionClicked = false;
 	org_tamina_html_component_HTMLComponent.call(this);
 };
 $hxClasses["fr.thanadev.baalreturn.views.NodeView"] = fr_thanadev_baalreturn_views_NodeView;
@@ -531,6 +663,8 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 	setModel: function(node) {
 		this._model = node;
 		this._model.modelUpdatedSignal.add($bind(this,this.modelChangedHandler));
+		this._decisionClicked = false;
+		node.run();
 		this.updateView();
 	}
 	,createdCallback: function() {
@@ -543,8 +677,11 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 		this.updateView();
 	}
 	,decisionClickedHandler: function(event) {
+		this._decisionClicked = true;
+		event.preventDefault();
 		var button = event.target;
 		var id = button.id;
+		var jQButton = js.JQuery(event.target);
 		id = id.split("_")[1];
 		this._model.get__decisions()[Std.parseInt(id)].run();
 	}
@@ -553,13 +690,15 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 		this._nodeText.innerText = this._model.get__text();
 		var cont = js.JQuery("#decisionContainer");
 		this._decisionContainer.innerHTML = "";
+		this._currentButtons = [];
 		var _g = 0;
 		var _g1 = this._model.get__decisions();
 		while(_g < _g1.length) {
 			var decision = _g1[_g];
 			++_g;
-			var button = cont.append("<button id='decision_" + decision.index + "'>" + decision.get__text() + "</button");
-			button.click($bind(this,this.decisionClickedHandler));
+			var button = cont.append("<button id='decision_" + decision.index + "'>" + decision.get__text() + "</button>");
+			button.unbind();
+			button.on("click",$bind(this,this.decisionClickedHandler));
 			this._currentButtons.push(button);
 		}
 	}
@@ -567,6 +706,34 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 		return "<div data-id=\"_nodeContainer\">\r\n    <h2 data-id=\"_nodeName\">Node Name</h2>\r\n    <p id=\"nodeText\" data-id=\"_nodeText\">Node Text</p>\r\n    <div id=\"decisionContainer\" data-id=\"_decisionContainer\">\r\n\r\n    </div>\r\n</div>";
 	}
 	,__class__: fr_thanadev_baalreturn_views_NodeView
+});
+var fr_thanadev_baalreturn_views_PlayerView = function() {
+	org_tamina_html_component_HTMLComponent.call(this);
+};
+$hxClasses["fr.thanadev.baalreturn.views.PlayerView"] = fr_thanadev_baalreturn_views_PlayerView;
+fr_thanadev_baalreturn_views_PlayerView.__name__ = ["fr","thanadev","baalreturn","views","PlayerView"];
+fr_thanadev_baalreturn_views_PlayerView.__super__ = org_tamina_html_component_HTMLComponent;
+fr_thanadev_baalreturn_views_PlayerView.prototype = $extend(org_tamina_html_component_HTMLComponent.prototype,{
+	setModel: function(player) {
+		this._model = player;
+		this._model.modelUpdatedSignal.add($bind(this,this.modelChangedHandler));
+		this.updateView();
+	}
+	,createdCallback: function() {
+		org_tamina_html_component_HTMLComponent.prototype.createdCallback.call(this);
+		this._model = null;
+	}
+	,modelChangedHandler: function() {
+		this.updateView();
+	}
+	,updateView: function() {
+		this._playerName.innerText = this._model.get_name();
+		this._playerLife.innerText = Std.string(this._model.get_health());
+	}
+	,getView: function() {
+		return "<div data-id=\"_nodeContainer\">\r\n    <h2 data-id=\"_playerName\">Player Name</h2>\r\n    <p>PV : <span data-id=\"_playerLife\"></span></p>\r\n</div>";
+	}
+	,__class__: fr_thanadev_baalreturn_views_PlayerView
 });
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
@@ -1318,7 +1485,10 @@ var q = window.jQuery;
 var js = js || {}
 js.JQuery = q;
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
-fr_thanadev_baalreturn_views_MainView.__meta__ = { obj : { view : [""]}, fields : { _nodeView : { skinpart : [""]}}};
+fr_thanadev_baalreturn_classes_actions_Action.__meta__ = { fields : { run : { 'abstract' : null}}};
+fr_thanadev_baalreturn_classes_actions_ActionTarget.PLAYER = "player";
+fr_thanadev_baalreturn_classes_actions_ActionTarget.ENEMY = "enemy";
+fr_thanadev_baalreturn_views_MainView.__meta__ = { obj : { view : [""]}, fields : { _nodeView : { skinpart : [""]}, _playerView : { skinpart : [""]}}};
 fr_thanadev_baalreturn_views_MainView.__registered = (function($this) {
 	var $r;
 	{
@@ -1336,6 +1506,17 @@ fr_thanadev_baalreturn_views_NodeView.__registered = (function($this) {
 		var this1 = org_tamina_html_component_HTMLApplication.get_componentsXTagList();
 		var key = "fr-thanadev-baalreturn-views-nodeview".toLowerCase();
 		this1.set(key,"fr.thanadev.baalreturn.views.NodeView");
+	}
+	$r = true;
+	return $r;
+}(this));
+fr_thanadev_baalreturn_views_PlayerView.__meta__ = { obj : { view : [""]}, fields : { _playerName : { skinpart : null}, _playerLife : { skinpart : null}}};
+fr_thanadev_baalreturn_views_PlayerView.__registered = (function($this) {
+	var $r;
+	{
+		var this1 = org_tamina_html_component_HTMLApplication.get_componentsXTagList();
+		var key = "fr-thanadev-baalreturn-views-playerview".toLowerCase();
+		this1.set(key,"fr.thanadev.baalreturn.views.PlayerView");
 	}
 	$r = true;
 	return $r;

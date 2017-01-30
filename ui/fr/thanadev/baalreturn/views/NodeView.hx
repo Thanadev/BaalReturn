@@ -20,6 +20,7 @@ class NodeView extends HTMLComponent {
     @skinpart private var _decisionContainer:Element;
 
     private var _currentButtons:Array<JQuery>;
+    private var _decisionClicked:Bool = false;
 
     private var _model:Node;
 
@@ -30,6 +31,8 @@ class NodeView extends HTMLComponent {
     public function setModel(node:Node):Void {
         _model = node;
         _model.modelUpdatedSignal.add(modelChangedHandler);
+        _decisionClicked = false;
+        node.run();
 
         updateView();
     }
@@ -47,11 +50,16 @@ class NodeView extends HTMLComponent {
     }
 
     public function decisionClickedHandler(event:js.JQuery.JqEvent):Void {
-        var button = untyped __js__("event.target");
-        var id:String = button.id;
+        if (true || _decisionClicked == false) {
+            _decisionClicked = true;
+            event.preventDefault();
+            var button = untyped __js__("event.target");
+            var id:String = button.id;
+            var jQButton = new JQuery(event.target);
 
-        id = id.split('_')[1];
-        _model._decisions[Std.parseInt(id)].run();
+            id = id.split('_')[1];
+            _model._decisions[Std.parseInt(id)].run();
+        }
     }
 
     public function updateView():Void {
@@ -63,9 +71,11 @@ class NodeView extends HTMLComponent {
         var cont = new JQuery("#decisionContainer");
         _decisionContainer.innerHTML = "";
 
+        _currentButtons = new Array<JQuery>();
         for (decision in _model._decisions) {
-            var button = cont.append("<button id='decision_" + decision.index + "'>" + decision._text + "</button");
-            button.click(decisionClickedHandler);
+            var button = cont.append("<button id='decision_" + decision.index + "'>" + decision._text + "</button>");
+            button.unbind();
+            button.on("click", decisionClickedHandler);
             _currentButtons.push(button);
         }
     }

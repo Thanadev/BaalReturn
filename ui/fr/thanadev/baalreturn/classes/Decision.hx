@@ -1,5 +1,6 @@
 package fr.thanadev.baalreturn.classes;
 
+import fr.thanadev.baalreturn.classes.actions.Action;
 import fr.thanadev.baalreturn.dao.NodeDao;
 import haxe.Json;
 import msignal.Signal.Signal1;
@@ -14,7 +15,7 @@ class Decision {
     @:isVar public var _targetNode(get, null):Node;
     @:isVar public var _targetNodeId(get, null):Int;
 
-    public function new(text:String, targetNodeId) {
+    public function new(text:String, targetNodeId:Int) {
         _text = text;
         _actions = new Array<Action>();
         _targetNodeId = targetNodeId;
@@ -29,14 +30,27 @@ class Decision {
     }
 
     public static function fromDynamic(parsed:Dynamic):Decision {
-        trace("Decision : " + parsed);
         var decision = new Decision(parsed._text, parsed._targetNodeId);
+
+        for (i in 0...parsed._actions.length) {
+            decision.addAction(Action.fromDynamic(parsed._actions[i]));
+        }
 
         return decision;
     }
 
     public function run() {
-        decisionChosen.dispatch(_targetNodeId);
+        for (action in _actions) {
+            action.run();
+        }
+
+        if (_targetNodeId > 0) {
+            decisionChosen.dispatch(_targetNodeId);
+        }
+    }
+
+    public function addAction(action:Action) {
+        _actions.push(action);
     }
 
     function get__text():String {
@@ -54,6 +68,4 @@ class Decision {
     function get__targetNodeId():Int {
         return _targetNodeId;
     }
-
-
 }

@@ -1,5 +1,7 @@
 package fr.thanadev.baalreturn.views;
 
+import fr.thanadev.baalreturn.services.PlayerService;
+import fr.thanadev.baalreturn.classes.Player;
 import fr.thanadev.baalreturn.dao.NodeDao;
 import js.Browser;
 import fr.thanadev.baalreturn.classes.Decision;
@@ -12,6 +14,7 @@ import org.tamina.html.component.HTMLComponent;
 class MainView extends HTMLComponent {
 
     @skinpart("") private var _nodeView:NodeView;
+    @skinpart("") private var _playerView:PlayerView;
 
     private var _loader:NodeDao;
     private var _nodes:Array<Node>;
@@ -25,6 +28,7 @@ class MainView extends HTMLComponent {
     override public function createdCallback():Void {
         super.createdCallback();
         _currentNode = -1;
+        PlayerService.getInstance("The new hero", 100);
         _loader = NodeDao.getInstance();
 
         initNodes();
@@ -51,10 +55,10 @@ class MainView extends HTMLComponent {
 
     private function skinTimeoutHandler() {
         _nodeView.setModel(_nodes[_currentNode]);
+        _playerView.setModel(PlayerService.getPlayer());
     }
 
     private function loadNode(nodeIndex:Int = -1) {
-        trace("NodeIndex asked : " + nodeIndex);
         _loader.loadNode(nodeIndex, nodeLoadedHandler);
     }
 }

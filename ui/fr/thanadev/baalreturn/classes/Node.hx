@@ -1,5 +1,6 @@
 package fr.thanadev.baalreturn.classes;
 
+import fr.thanadev.baalreturn.classes.actions.Action;
 import haxe.Json;
 import msignal.Signal.Signal0;
 import msignal.Signal.Signal1;
@@ -30,16 +31,35 @@ class Node {
         for (i in 0...parsed._decisions.length) {
             var array = cast(parsed._decisions, Array<Dynamic>);
             var parsedDecision = Decision.fromDynamic(array[i]);
+
             node.addDecision(parsedDecision);
         }
 
+        for (i in 0...parsed._actions.length) {
+            var array = cast(parsed._actions, Array<Dynamic>);
+            var parsedAction = Action.fromDynamic(array[i]);
+
+            node.addAction(parsedAction);
+        }
+
         return node;
+    }
+
+    public function run():Void {
+        for (action in _actions) {
+            action.run();
+        }
     }
 
     public function addDecision(decision:Decision):Void {
         _decisions.push(decision);
         decision.index = _decisions.length - 1;
         decision.decisionChosen.add(decisionChosenHandler);
+        modelUpdatedSignal.dispatch();
+    }
+
+    public function addAction(action:Action):Void {
+        _actions.push(action);
         modelUpdatedSignal.dispatch();
     }
 
