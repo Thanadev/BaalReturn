@@ -8,12 +8,48 @@
   "_decisions":[
     {
       "index":0,
+      "_text":"“Deux soeurs consanguines”",
+      "_message":"Le démon vous vole votre energie vitale",
+      "_targetNodeId":null,
+      "_actions":[
+        {
+          "_target":"player",
+          "_damages":40
+        }
+      ]
+    },
+    {
+      "index":1,
       "_text":"“Le jour et la nuit”",
       "_message":"",
       "_targetNodeId":32,
       "_actions":[
       ]
-    }
+    },
+    {
+      "index":2,
+      "_text":"“L’oeuf et la poule”",
+      "_message":"Le démon vous vole votre energie vitale",
+      "_targetNodeId":null,
+      "_actions":[
+        {
+          "_target":"player",
+          "_damages":40
+        }
+      ]
+    },
+    {
+      "index":3,
+      "_text":"“La vie et la mort”",
+      "_message":"Le démon vous vole votre energie vitale",
+      "_targetNodeId":null,
+      "_actions":[
+        {
+          "_target":"player",
+          "_damages":40
+        }
+      ]
+    },
   ],
   "_actions":[
   ]
