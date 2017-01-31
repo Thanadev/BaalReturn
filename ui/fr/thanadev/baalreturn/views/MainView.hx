@@ -1,5 +1,9 @@
 package fr.thanadev.baalreturn.views;
 
+import fr.thanadev.baalreturn.services.LoggerService;
+import fr.thanadev.baalreturn.services.FightBusinessService;
+import fr.thanadev.baalreturn.services.EnemyService;
+import fr.thanadev.baalreturn.classes.Enemy;
 import fr.thanadev.baalreturn.services.PlayerService;
 import fr.thanadev.baalreturn.classes.Player;
 import fr.thanadev.baalreturn.dao.NodeDao;
@@ -15,6 +19,7 @@ class MainView extends HTMLComponent {
 
     @skinpart("") private var _nodeView:NodeView;
     @skinpart("") private var _playerView:PlayerView;
+    @skinpart("") private var _enemyView:EnemyView;
 
     private var _loader:NodeDao;
     private var _nodes:Array<Node>;
@@ -29,12 +34,17 @@ class MainView extends HTMLComponent {
         super.createdCallback();
         _currentNode = -1;
         PlayerService.getInstance("The new hero", 100);
+        EnemyService.getInstance().enemyLoaded.add(enemyLoadedHandler);
+        FightBusinessService.getInstance().fightEndSignal.add(function (nodeIndex:Int) {
+            _enemyView.visible = false;
+            loadNode(nodeIndex);
+        });
         _loader = NodeDao.getInstance();
-
         initNodes();
     }
 
     public function nodeLoadedHandler(node:Node):Void {
+        LoggerService.getInstance().clearArea();
         node.nextNodeChosen.add(loadNode);
         _nodes.push(node);
         _currentNode++;
@@ -47,6 +57,11 @@ class MainView extends HTMLComponent {
         }
     }
 
+    public function enemyLoadedHandler(enemy:Enemy) {
+        _enemyView.visible = true;
+        _enemyView.setModel(enemy);
+    }
+
     private function initNodes() {
         _nodes = new Array<Node>();
 
@@ -54,6 +69,7 @@ class MainView extends HTMLComponent {
     }
 
     private function skinTimeoutHandler() {
+        _enemyView.visible = false;
         _nodeView.setModel(_nodes[_currentNode]);
         _playerView.setModel(PlayerService.getPlayer());
     }

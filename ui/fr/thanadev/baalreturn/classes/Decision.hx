@@ -1,5 +1,7 @@
 package fr.thanadev.baalreturn.classes;
 
+import fr.thanadev.baalreturn.services.FightBusinessService;
+import fr.thanadev.baalreturn.services.LoggerService;
 import fr.thanadev.baalreturn.classes.actions.Action;
 import fr.thanadev.baalreturn.dao.NodeDao;
 import haxe.Json;
@@ -14,23 +16,18 @@ class Decision {
     @:isVar public var _actions(get, null):Array<Action>;
     @:isVar public var _targetNode(get, null):Node;
     @:isVar public var _targetNodeId(get, null):Int;
+    @:isVar public var _message(get, null):String;
 
-    public function new(text:String, targetNodeId:Int) {
+    public function new(text:String, targetNodeId:Int, message:String) {
         _text = text;
         _actions = new Array<Action>();
         _targetNodeId = targetNodeId;
+        _message = message;
         decisionChosen = new Signal1<Int>();
     }
 
-    public static function fromJson(json:String):Decision {
-        var parsed = Json.parse(json);
-        var decision = new Decision(parsed._text, parsed._targetNodeId);
-
-        return decision;
-    }
-
     public static function fromDynamic(parsed:Dynamic):Decision {
-        var decision = new Decision(parsed._text, parsed._targetNodeId);
+        var decision = new Decision(parsed._text, parsed._targetNodeId, parsed._message);
 
         for (i in 0...parsed._actions.length) {
             decision.addAction(Action.fromDynamic(parsed._actions[i]));
@@ -40,12 +37,18 @@ class Decision {
     }
 
     public function run() {
-        for (action in _actions) {
-            action.run();
-        }
+        if (FightBusinessService.getInstance().isPlayerTurn()) {
+            for (action in _actions) {
+                action.run();
+            }
 
-        if (_targetNodeId > 0) {
-            decisionChosen.dispatch(_targetNodeId);
+            LoggerService.getInstance().log(_message);
+
+            if (_targetNodeId != null && _targetNodeId > 0) {
+                decisionChosen.dispatch(_targetNodeId);
+            } else {
+                FightBusinessService.getInstance().playerPlayed();
+            }
         }
     }
 
@@ -67,5 +70,9 @@ class Decision {
 
     function get__targetNodeId():Int {
         return _targetNodeId;
+    }
+
+    function get__message():String {
+        return _message;
     }
 }

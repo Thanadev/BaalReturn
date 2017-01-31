@@ -1,5 +1,6 @@
 package fr.thanadev.baalreturn.classes.actions;
 
+import fr.thanadev.baalreturn.services.EnemyService;
 import fr.thanadev.baalreturn.services.PlayerService;
 import fr.thanadev.baalreturn.classes.actions.Action.ActionTarget;
 import fr.thanadev.baalreturn.classes.actions.Action.ActionTarget;
@@ -15,6 +16,8 @@ class DamageAction extends Action {
     public override function run() {
         if (_target == ActionTarget.PLAYER) {
             PlayerService.getPlayer().takeDamages(_damages);
+        } else if (_target == ActionTarget.ENEMY) {
+            EnemyService.getCurrentEnemy().takeDamages(_damages);
         }
     }
 

@@ -1,5 +1,8 @@
 package fr.thanadev.baalreturn.classes;
 
+import fr.thanadev.baalreturn.services.PlayerService;
+import fr.thanadev.baalreturn.services.FightBusinessService;
+import fr.thanadev.baalreturn.services.EnemyService;
 import fr.thanadev.baalreturn.classes.actions.Action;
 import haxe.Json;
 import msignal.Signal.Signal0;
@@ -13,6 +16,8 @@ class Node {
     @:isVar public var _decisions(get, null):Array<Decision>;
     @:isVar public var _actions(get, null):Array<Action>;
     @:isVar public var _text(get, null):String;
+    @:isVar public var _nextNodeIndex(get, null):Int;
+    @:isVar public var _enemyId(get, null):Int;
 
     public function new(index:Int, text:String) {
         modelUpdatedSignal = new Signal0();
@@ -42,6 +47,8 @@ class Node {
             node.addAction(parsedAction);
         }
 
+        node.initFightNode(parsed._enemyId, parsed._nextNodeIndex);
+
         return node;
     }
 
@@ -49,6 +56,16 @@ class Node {
         for (action in _actions) {
             action.run();
         }
+
+        if (_enemyId != null && _nextNodeIndex != null) {
+            EnemyService.getInstance().generateEnemyFromId(_enemyId);
+            FightBusinessService.getInstance().startFight(PlayerService.getPlayer(), EnemyService.getCurrentEnemy(), _nextNodeIndex);
+        }
+    }
+
+    public function initFightNode(enemyId:Int, nextNode:Int) {
+        _enemyId = enemyId;
+        _nextNodeIndex = nextNode;
     }
 
     public function addDecision(decision:Decision):Void {
@@ -77,5 +94,13 @@ class Node {
 
     function get__text():String {
         return _text;
+    }
+
+    function get__nextNodeIndex():Int {
+        return _nextNodeIndex;
+    }
+
+    function get__enemyId():Int {
+        return _enemyId;
     }
 }

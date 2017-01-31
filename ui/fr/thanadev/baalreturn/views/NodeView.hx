@@ -1,5 +1,6 @@
 package fr.thanadev.baalreturn.views;
 
+import fr.thanadev.baalreturn.services.LoggerService;
 import createjs.easeljs.EventDispatcher;
 import msignal.Signal.Signal1;
 import org.tamina.events.html.MouseEventType;
@@ -16,12 +17,11 @@ class NodeView extends HTMLComponent {
 
     @skinpart private var _nodeName:Element;
     @skinpart private var _nodeText:Element;
+    @skinpart private var _nodeLog:Element;
     @skinpart private var _nodeContainer:Element;
     @skinpart private var _decisionContainer:Element;
 
     private var _currentButtons:Array<JQuery>;
-    private var _decisionClicked:Bool = false;
-
     private var _model:Node;
 
     public function new() {
@@ -31,7 +31,6 @@ class NodeView extends HTMLComponent {
     public function setModel(node:Node):Void {
         _model = node;
         _model.modelUpdatedSignal.add(modelChangedHandler);
-        _decisionClicked = false;
         node.run();
 
         updateView();
@@ -39,6 +38,8 @@ class NodeView extends HTMLComponent {
 
     override public function createdCallback():Void {
         super.createdCallback();
+
+        LoggerService.getInstance().onLog.add(displayLog);
 
         _model = null;
         _currentButtons = new Array<JQuery>();
@@ -50,26 +51,23 @@ class NodeView extends HTMLComponent {
     }
 
     public function decisionClickedHandler(event:js.JQuery.JqEvent):Void {
-        if (true || _decisionClicked == false) {
-            _decisionClicked = true;
-            event.preventDefault();
-            var button = untyped __js__("event.target");
-            var id:String = button.id;
-            var jQButton = new JQuery(event.target);
+        event.preventDefault();
+        var button = untyped __js__("event.target");
+        var id:String = button.id;
+        var jQButton = new JQuery(event.target);
 
-            id = id.split('_')[1];
-            _model._decisions[Std.parseInt(id)].run();
-        }
+        id = id.split('_')[1];
+        _model._decisions[Std.parseInt(id)].run();
     }
 
     public function updateView():Void {
         // Node Text
         var textCont = new JQuery("#nodeText");
-        _nodeText.innerText = _model._text;
+        textCont.text(_model._text);
 
         // Decision Container
         var cont = new JQuery("#decisionContainer");
-        _decisionContainer.innerHTML = "";
+        cont.text("");
 
         _currentButtons = new Array<JQuery>();
         for (decision in _model._decisions) {
@@ -78,5 +76,10 @@ class NodeView extends HTMLComponent {
             button.on("click", decisionClickedHandler);
             _currentButtons.push(button);
         }
+    }
+
+    public function displayLog(message:String) {
+        var logArea = new JQuery(_nodeLog);
+        logArea.text(message);
     }
 }

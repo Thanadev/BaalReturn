@@ -24,9 +24,9 @@ class Damageable {
         if (health <= 0) {
             health = 0;
             die();
-        } else {
-            modelUpdatedSignal.dispatch();
         }
+
+        modelUpdatedSignal.dispatch();
     }
 
     private function die():Void {

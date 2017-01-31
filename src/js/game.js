@@ -237,7 +237,8 @@ fr_thanadev_baalreturn_classes_Damageable.prototype = {
 		if(this.get_health() <= 0) {
 			this.health = 0;
 			this.die();
-		} else this.modelUpdatedSignal.dispatch();
+		}
+		this.modelUpdatedSignal.dispatch();
 	}
 	,die: function() {
 		this.deathSignal.dispatch();
@@ -250,21 +251,17 @@ fr_thanadev_baalreturn_classes_Damageable.prototype = {
 	}
 	,__class__: fr_thanadev_baalreturn_classes_Damageable
 };
-var fr_thanadev_baalreturn_classes_Decision = function(text,targetNodeId) {
+var fr_thanadev_baalreturn_classes_Decision = function(text,targetNodeId,message) {
 	this._text = text;
 	this._actions = [];
 	this._targetNodeId = targetNodeId;
+	this._message = message;
 	this.decisionChosen = new msignal_Signal1();
 };
 $hxClasses["fr.thanadev.baalreturn.classes.Decision"] = fr_thanadev_baalreturn_classes_Decision;
 fr_thanadev_baalreturn_classes_Decision.__name__ = ["fr","thanadev","baalreturn","classes","Decision"];
-fr_thanadev_baalreturn_classes_Decision.fromJson = function(json) {
-	var parsed = JSON.parse(json);
-	var decision = new fr_thanadev_baalreturn_classes_Decision(parsed._text,parsed._targetNodeId);
-	return decision;
-};
 fr_thanadev_baalreturn_classes_Decision.fromDynamic = function(parsed) {
-	var decision = new fr_thanadev_baalreturn_classes_Decision(parsed._text,parsed._targetNodeId);
+	var decision = new fr_thanadev_baalreturn_classes_Decision(parsed._text,parsed._targetNodeId,parsed._message);
 	var _g1 = 0;
 	var _g = parsed._actions.length;
 	while(_g1 < _g) {
@@ -275,14 +272,17 @@ fr_thanadev_baalreturn_classes_Decision.fromDynamic = function(parsed) {
 };
 fr_thanadev_baalreturn_classes_Decision.prototype = {
 	run: function() {
-		var _g = 0;
-		var _g1 = this.get__actions();
-		while(_g < _g1.length) {
-			var action = _g1[_g];
-			++_g;
-			action.run();
+		if(fr_thanadev_baalreturn_services_FightBusinessService.getInstance().isPlayerTurn()) {
+			var _g = 0;
+			var _g1 = this.get__actions();
+			while(_g < _g1.length) {
+				var action = _g1[_g];
+				++_g;
+				action.run();
+			}
+			fr_thanadev_baalreturn_services_LoggerService.getInstance().log(this.get__message());
+			if(this.get__targetNodeId() != null && this.get__targetNodeId() > 0) this.decisionChosen.dispatch(this.get__targetNodeId()); else fr_thanadev_baalreturn_services_FightBusinessService.getInstance().playerPlayed();
 		}
-		if(this.get__targetNodeId() > 0) this.decisionChosen.dispatch(this.get__targetNodeId());
 	}
 	,addAction: function(action) {
 		this.get__actions().push(action);
@@ -299,8 +299,32 @@ fr_thanadev_baalreturn_classes_Decision.prototype = {
 	,get__targetNodeId: function() {
 		return this._targetNodeId;
 	}
+	,get__message: function() {
+		return this._message;
+	}
 	,__class__: fr_thanadev_baalreturn_classes_Decision
 };
+var fr_thanadev_baalreturn_classes_Enemy = function(name,health,pattern) {
+	fr_thanadev_baalreturn_classes_Damageable.call(this,name,health);
+	this._pattern = pattern;
+};
+$hxClasses["fr.thanadev.baalreturn.classes.Enemy"] = fr_thanadev_baalreturn_classes_Enemy;
+fr_thanadev_baalreturn_classes_Enemy.__name__ = ["fr","thanadev","baalreturn","classes","Enemy"];
+fr_thanadev_baalreturn_classes_Enemy.__super__ = fr_thanadev_baalreturn_classes_Damageable;
+fr_thanadev_baalreturn_classes_Enemy.prototype = $extend(fr_thanadev_baalreturn_classes_Damageable.prototype,{
+	setName: function(name) {
+		this.name = name;
+		this.modelUpdatedSignal.dispatch();
+	}
+	,setHealth: function(health) {
+		this.health = health;
+		this.modelUpdatedSignal.dispatch();
+	}
+	,get__pattern: function() {
+		return this._pattern;
+	}
+	,__class__: fr_thanadev_baalreturn_classes_Enemy
+});
 var fr_thanadev_baalreturn_classes_Node = function(index,text) {
 	this.modelUpdatedSignal = new msignal_Signal0();
 	this.nextNodeChosen = new msignal_Signal1();
@@ -332,6 +356,7 @@ fr_thanadev_baalreturn_classes_Node.fromJson = function(json) {
 		var parsedAction = fr_thanadev_baalreturn_classes_actions_Action.fromDynamic(array1[i1]);
 		node.addAction(parsedAction);
 	}
+	node.initFightNode(parsed._enemyId,parsed._nextNodeIndex);
 	return node;
 };
 fr_thanadev_baalreturn_classes_Node.prototype = {
@@ -343,6 +368,14 @@ fr_thanadev_baalreturn_classes_Node.prototype = {
 			++_g;
 			action.run();
 		}
+		if(this.get__enemyId() != null && this.get__nextNodeIndex() != null) {
+			fr_thanadev_baalreturn_services_EnemyService.getInstance().generateEnemyFromId(this.get__enemyId());
+			fr_thanadev_baalreturn_services_FightBusinessService.getInstance().startFight(fr_thanadev_baalreturn_services_PlayerService.getPlayer(),fr_thanadev_baalreturn_services_EnemyService.getCurrentEnemy(),this.get__nextNodeIndex());
+		}
+	}
+	,initFightNode: function(enemyId,nextNode) {
+		this._enemyId = enemyId;
+		this._nextNodeIndex = nextNode;
 	}
 	,addDecision: function(decision) {
 		this.get__decisions().push(decision);
@@ -365,6 +398,12 @@ fr_thanadev_baalreturn_classes_Node.prototype = {
 	}
 	,get__text: function() {
 		return this._text;
+	}
+	,get__nextNodeIndex: function() {
+		return this._nextNodeIndex;
+	}
+	,get__enemyId: function() {
+		return this._enemyId;
 	}
 	,__class__: fr_thanadev_baalreturn_classes_Node
 };
@@ -412,7 +451,7 @@ fr_thanadev_baalreturn_classes_actions_DamageAction.__name__ = ["fr","thanadev",
 fr_thanadev_baalreturn_classes_actions_DamageAction.__super__ = fr_thanadev_baalreturn_classes_actions_Action;
 fr_thanadev_baalreturn_classes_actions_DamageAction.prototype = $extend(fr_thanadev_baalreturn_classes_actions_Action.prototype,{
 	run: function() {
-		if(this.get__target() == "player") fr_thanadev_baalreturn_services_PlayerService.getPlayer().takeDamages(this.get__damages());
+		if(this.get__target() == "player") fr_thanadev_baalreturn_services_PlayerService.getPlayer().takeDamages(this.get__damages()); else if(this.get__target() == "enemy") fr_thanadev_baalreturn_services_EnemyService.getCurrentEnemy().takeDamages(this.get__damages());
 	}
 	,set__damages: function(value) {
 		return this._damages = value;
@@ -421,6 +460,29 @@ fr_thanadev_baalreturn_classes_actions_DamageAction.prototype = $extend(fr_thana
 		return this._damages;
 	}
 	,__class__: fr_thanadev_baalreturn_classes_actions_DamageAction
+});
+var fr_thanadev_baalreturn_classes_patterns_EnemyPattern = function() {
+};
+$hxClasses["fr.thanadev.baalreturn.classes.patterns.EnemyPattern"] = fr_thanadev_baalreturn_classes_patterns_EnemyPattern;
+fr_thanadev_baalreturn_classes_patterns_EnemyPattern.__name__ = ["fr","thanadev","baalreturn","classes","patterns","EnemyPattern"];
+fr_thanadev_baalreturn_classes_patterns_EnemyPattern.prototype = {
+	execute: function() {
+	}
+	,__class__: fr_thanadev_baalreturn_classes_patterns_EnemyPattern
+};
+var fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern = function() {
+	fr_thanadev_baalreturn_classes_patterns_EnemyPattern.call(this);
+};
+$hxClasses["fr.thanadev.baalreturn.classes.patterns.BaseMinionPattern"] = fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern;
+fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern.__name__ = ["fr","thanadev","baalreturn","classes","patterns","BaseMinionPattern"];
+fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern.__super__ = fr_thanadev_baalreturn_classes_patterns_EnemyPattern;
+fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern.prototype = $extend(fr_thanadev_baalreturn_classes_patterns_EnemyPattern.prototype,{
+	execute: function() {
+		var attack = new fr_thanadev_baalreturn_classes_actions_DamageAction("player",2);
+		fr_thanadev_baalreturn_services_LoggerService.getInstance().log("Le sbire de Baal vous entaille, vous perdez 2 points de vie !");
+		attack.run();
+	}
+	,__class__: fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern
 });
 var fr_thanadev_baalreturn_dao_NodeDao = function() {
 };
@@ -445,6 +507,109 @@ fr_thanadev_baalreturn_dao_NodeDao.prototype = {
 		request.send();
 	}
 	,__class__: fr_thanadev_baalreturn_dao_NodeDao
+};
+var fr_thanadev_baalreturn_services_EnemyService = function(enemyName,enemyHealth,pattern) {
+	this._enemy = null;
+	this._enemy = new fr_thanadev_baalreturn_classes_Enemy(enemyName,enemyHealth,pattern);
+	this.enemyLoaded = new msignal_Signal1();
+};
+$hxClasses["fr.thanadev.baalreturn.services.EnemyService"] = fr_thanadev_baalreturn_services_EnemyService;
+fr_thanadev_baalreturn_services_EnemyService.__name__ = ["fr","thanadev","baalreturn","services","EnemyService"];
+fr_thanadev_baalreturn_services_EnemyService.getInstance = function(enemyName,enemyHealth,enemyPattern) {
+	if(enemyHealth == null) enemyHealth = 100;
+	if(enemyName == null) enemyName = "Soldat de la corruption";
+	if(fr_thanadev_baalreturn_services_EnemyService._instance == null) {
+		fr_thanadev_baalreturn_services_EnemyService._defaultPattern = new fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern();
+		if(enemyPattern == null) enemyPattern = fr_thanadev_baalreturn_services_EnemyService._defaultPattern;
+		fr_thanadev_baalreturn_services_EnemyService._instance = new fr_thanadev_baalreturn_services_EnemyService(enemyName,enemyHealth,enemyPattern);
+		fr_thanadev_baalreturn_services_EnemyService._instance.enemyLoaded.dispatch(fr_thanadev_baalreturn_services_EnemyService._instance.get__enemy());
+	}
+	return fr_thanadev_baalreturn_services_EnemyService._instance;
+};
+fr_thanadev_baalreturn_services_EnemyService.getCurrentEnemy = function() {
+	return fr_thanadev_baalreturn_services_EnemyService._instance.get__enemy();
+};
+fr_thanadev_baalreturn_services_EnemyService.prototype = {
+	generateEnemyFromId: function(enemyId) {
+		switch(enemyId) {
+		case 1:
+			this._enemy = new fr_thanadev_baalreturn_classes_Enemy("Soldat de la corruption",100,new fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern());
+			break;
+		}
+		this.enemyLoaded.dispatch(this.get__enemy());
+	}
+	,get__enemy: function() {
+		return this._enemy;
+	}
+	,__class__: fr_thanadev_baalreturn_services_EnemyService
+};
+var fr_thanadev_baalreturn_services_FightBusinessService = function() {
+	this.fightEndSignal = new msignal_Signal1();
+	this.initFightService();
+};
+$hxClasses["fr.thanadev.baalreturn.services.FightBusinessService"] = fr_thanadev_baalreturn_services_FightBusinessService;
+fr_thanadev_baalreturn_services_FightBusinessService.__name__ = ["fr","thanadev","baalreturn","services","FightBusinessService"];
+fr_thanadev_baalreturn_services_FightBusinessService.getInstance = function() {
+	if(fr_thanadev_baalreturn_services_FightBusinessService._instance == null) fr_thanadev_baalreturn_services_FightBusinessService._instance = new fr_thanadev_baalreturn_services_FightBusinessService();
+	return fr_thanadev_baalreturn_services_FightBusinessService._instance;
+};
+fr_thanadev_baalreturn_services_FightBusinessService.prototype = {
+	startFight: function(player,enemy,victoryNodeIndex) {
+		var _g = this;
+		this._player = player;
+		this._player.deathSignal.add(function() {
+			_g.damageableDeathHandler(true);
+		});
+		this._enemy = enemy;
+		this._enemy.deathSignal.add(function() {
+			_g.damageableDeathHandler(false);
+		});
+		this._isFightActive = true;
+		this._victoryNodeIndex = victoryNodeIndex;
+	}
+	,playerPlayed: function() {
+		if(this._isFightActive) {
+			this._playerTurn = false;
+			this._enemy.get__pattern().execute();
+			this._playerTurn = true;
+		}
+	}
+	,isPlayerTurn: function() {
+		return this._playerTurn;
+	}
+	,damageableDeathHandler: function(isPlayerDead) {
+		this.initFightService();
+		if(isPlayerDead) this.fightEndSignal.dispatch(13); else this.fightEndSignal.dispatch(this._victoryNodeIndex);
+	}
+	,initFightService: function() {
+		this._isFightActive = false;
+		this._playerTurn = true;
+	}
+	,__class__: fr_thanadev_baalreturn_services_FightBusinessService
+};
+var fr_thanadev_baalreturn_services_LoggerService = function() {
+	this.onLog = new msignal_Signal1();
+	this.logs = [];
+};
+$hxClasses["fr.thanadev.baalreturn.services.LoggerService"] = fr_thanadev_baalreturn_services_LoggerService;
+fr_thanadev_baalreturn_services_LoggerService.__name__ = ["fr","thanadev","baalreturn","services","LoggerService"];
+fr_thanadev_baalreturn_services_LoggerService.getInstance = function() {
+	if(fr_thanadev_baalreturn_services_LoggerService._instance == null) fr_thanadev_baalreturn_services_LoggerService._instance = new fr_thanadev_baalreturn_services_LoggerService();
+	return fr_thanadev_baalreturn_services_LoggerService._instance;
+};
+fr_thanadev_baalreturn_services_LoggerService.prototype = {
+	log: function(message) {
+		this.logs.push(message);
+		this.onLog.dispatch(message);
+	}
+	,clearArea: function() {
+		this.onLog.dispatch("");
+	}
+	,clearAll: function() {
+		this.onLog.dispatch("");
+		this.logs = [];
+	}
+	,__class__: fr_thanadev_baalreturn_services_LoggerService
 };
 var fr_thanadev_baalreturn_services_PlayerService = function(playerName,playerHealth) {
 	this._player = new fr_thanadev_baalreturn_classes_Player(playerName,playerHealth);
@@ -612,6 +777,34 @@ org_tamina_html_component_HTMLComponent.prototype = $extend(HTMLHtmlElement.prot
 	}
 	,__class__: org_tamina_html_component_HTMLComponent
 });
+var fr_thanadev_baalreturn_views_EnemyView = function() {
+	org_tamina_html_component_HTMLComponent.call(this);
+};
+$hxClasses["fr.thanadev.baalreturn.views.EnemyView"] = fr_thanadev_baalreturn_views_EnemyView;
+fr_thanadev_baalreturn_views_EnemyView.__name__ = ["fr","thanadev","baalreturn","views","EnemyView"];
+fr_thanadev_baalreturn_views_EnemyView.__super__ = org_tamina_html_component_HTMLComponent;
+fr_thanadev_baalreturn_views_EnemyView.prototype = $extend(org_tamina_html_component_HTMLComponent.prototype,{
+	setModel: function(enemy) {
+		this._model = enemy;
+		this._model.modelUpdatedSignal.add($bind(this,this.modelChangedHandler));
+		this.updateView();
+	}
+	,createdCallback: function() {
+		org_tamina_html_component_HTMLComponent.prototype.createdCallback.call(this);
+		this._model = null;
+	}
+	,modelChangedHandler: function() {
+		this.updateView();
+	}
+	,updateView: function() {
+		this._enemyName.innerText = this._model.get_name();
+		this._enemyLife.innerText = Std.string(this._model.get_health());
+	}
+	,getView: function() {
+		return "<div data-id=\"_nodeContainer\">\r\n    <h2 data-id=\"_enemyName\">Enemy Name</h2>\r\n    <p>PV : <span data-id=\"_enemyLife\"></span></p>\r\n</div>";
+	}
+	,__class__: fr_thanadev_baalreturn_views_EnemyView
+});
 var fr_thanadev_baalreturn_views_MainView = function() {
 	org_tamina_html_component_HTMLComponent.call(this);
 };
@@ -620,13 +813,20 @@ fr_thanadev_baalreturn_views_MainView.__name__ = ["fr","thanadev","baalreturn","
 fr_thanadev_baalreturn_views_MainView.__super__ = org_tamina_html_component_HTMLComponent;
 fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_component_HTMLComponent.prototype,{
 	createdCallback: function() {
+		var _g = this;
 		org_tamina_html_component_HTMLComponent.prototype.createdCallback.call(this);
 		this._currentNode = -1;
 		fr_thanadev_baalreturn_services_PlayerService.getInstance("The new hero",100);
+		fr_thanadev_baalreturn_services_EnemyService.getInstance().enemyLoaded.add($bind(this,this.enemyLoadedHandler));
+		fr_thanadev_baalreturn_services_FightBusinessService.getInstance().fightEndSignal.add(function(nodeIndex) {
+			_g._enemyView.set_visible(false);
+			_g.loadNode(nodeIndex);
+		});
 		this._loader = fr_thanadev_baalreturn_dao_NodeDao.getInstance();
 		this.initNodes();
 	}
 	,nodeLoadedHandler: function(node) {
+		fr_thanadev_baalreturn_services_LoggerService.getInstance().clearArea();
 		node.nextNodeChosen.add($bind(this,this.loadNode));
 		this._nodes.push(node);
 		this._currentNode++;
@@ -635,11 +835,16 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 			window.setTimeout($bind(this,this.skinTimeoutHandler),1);
 		}
 	}
+	,enemyLoadedHandler: function(enemy) {
+		this._enemyView.set_visible(true);
+		this._enemyView.setModel(enemy);
+	}
 	,initNodes: function() {
 		this._nodes = [];
 		this.loadNode(0);
 	}
 	,skinTimeoutHandler: function() {
+		this._enemyView.set_visible(false);
 		this._nodeView.setModel(this._nodes[this._currentNode]);
 		this._playerView.setModel(fr_thanadev_baalreturn_services_PlayerService.getPlayer());
 	}
@@ -648,12 +853,11 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 		this._loader.loadNode(nodeIndex,$bind(this,this.nodeLoadedHandler));
 	}
 	,getView: function() {
-		return "<fr-thanadev-baalreturn-views-playerview data-id=\"_playerView\"></fr-thanadev-baalreturn-views-playerview>\r\n<fr-thanadev-baalreturn-views-nodeview data-id=\"_nodeView\"></fr-thanadev-baalreturn-views-nodeview>";
+		return "<div>\r\n    <fr-thanadev-baalreturn-views-playerview data-id=\"_playerView\" style=\"display: inline-block; border: solid 1px black\"></fr-thanadev-baalreturn-views-playerview>\r\n    <fr-thanadev-baalreturn-views-enemyview data-id=\"_enemyView\" style=\"display: inline-block; border: solid 1px black\"></fr-thanadev-baalreturn-views-enemyview>\r\n</div>\r\n<fr-thanadev-baalreturn-views-nodeview data-id=\"_nodeView\"></fr-thanadev-baalreturn-views-nodeview>";
 	}
 	,__class__: fr_thanadev_baalreturn_views_MainView
 });
 var fr_thanadev_baalreturn_views_NodeView = function() {
-	this._decisionClicked = false;
 	org_tamina_html_component_HTMLComponent.call(this);
 };
 $hxClasses["fr.thanadev.baalreturn.views.NodeView"] = fr_thanadev_baalreturn_views_NodeView;
@@ -663,12 +867,12 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 	setModel: function(node) {
 		this._model = node;
 		this._model.modelUpdatedSignal.add($bind(this,this.modelChangedHandler));
-		this._decisionClicked = false;
 		node.run();
 		this.updateView();
 	}
 	,createdCallback: function() {
 		org_tamina_html_component_HTMLComponent.prototype.createdCallback.call(this);
+		fr_thanadev_baalreturn_services_LoggerService.getInstance().onLog.add($bind(this,this.displayLog));
 		this._model = null;
 		this._currentButtons = [];
 		this.requestNode = new msignal_Signal1();
@@ -677,7 +881,6 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 		this.updateView();
 	}
 	,decisionClickedHandler: function(event) {
-		this._decisionClicked = true;
 		event.preventDefault();
 		var button = event.target;
 		var id = button.id;
@@ -687,9 +890,9 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 	}
 	,updateView: function() {
 		var textCont = js.JQuery("#nodeText");
-		this._nodeText.innerText = this._model.get__text();
+		textCont.text(this._model.get__text());
 		var cont = js.JQuery("#decisionContainer");
-		this._decisionContainer.innerHTML = "";
+		cont.text("");
 		this._currentButtons = [];
 		var _g = 0;
 		var _g1 = this._model.get__decisions();
@@ -702,8 +905,12 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 			this._currentButtons.push(button);
 		}
 	}
+	,displayLog: function(message) {
+		var logArea = js.JQuery(this._nodeLog);
+		logArea.text(message);
+	}
 	,getView: function() {
-		return "<div data-id=\"_nodeContainer\">\r\n    <h2 data-id=\"_nodeName\">Node Name</h2>\r\n    <p id=\"nodeText\" data-id=\"_nodeText\">Node Text</p>\r\n    <div id=\"decisionContainer\" data-id=\"_decisionContainer\">\r\n\r\n    </div>\r\n</div>";
+		return "<div data-id=\"_nodeContainer\">\r\n    <h2 data-id=\"_nodeName\">Node Name</h2>\r\n    <p id=\"nodeText\" data-id=\"_nodeText\">Node Text</p>\r\n    <p id=\"nodeLog\" data-id=\"_nodeLog\"></p>\r\n    <div id=\"decisionContainer\" data-id=\"_decisionContainer\">\r\n\r\n    </div>\r\n</div>";
 	}
 	,__class__: fr_thanadev_baalreturn_views_NodeView
 });
@@ -1488,7 +1695,18 @@ msignal_SlotList.NIL = new msignal_SlotList(null,null);
 fr_thanadev_baalreturn_classes_actions_Action.__meta__ = { fields : { run : { 'abstract' : null}}};
 fr_thanadev_baalreturn_classes_actions_ActionTarget.PLAYER = "player";
 fr_thanadev_baalreturn_classes_actions_ActionTarget.ENEMY = "enemy";
-fr_thanadev_baalreturn_views_MainView.__meta__ = { obj : { view : [""]}, fields : { _nodeView : { skinpart : [""]}, _playerView : { skinpart : [""]}}};
+fr_thanadev_baalreturn_views_EnemyView.__meta__ = { obj : { view : [""]}, fields : { _enemyName : { skinpart : null}, _enemyLife : { skinpart : null}}};
+fr_thanadev_baalreturn_views_EnemyView.__registered = (function($this) {
+	var $r;
+	{
+		var this1 = org_tamina_html_component_HTMLApplication.get_componentsXTagList();
+		var key = "fr-thanadev-baalreturn-views-enemyview".toLowerCase();
+		this1.set(key,"fr.thanadev.baalreturn.views.EnemyView");
+	}
+	$r = true;
+	return $r;
+}(this));
+fr_thanadev_baalreturn_views_MainView.__meta__ = { obj : { view : [""]}, fields : { _nodeView : { skinpart : [""]}, _playerView : { skinpart : [""]}, _enemyView : { skinpart : [""]}}};
 fr_thanadev_baalreturn_views_MainView.__registered = (function($this) {
 	var $r;
 	{
@@ -1499,7 +1717,7 @@ fr_thanadev_baalreturn_views_MainView.__registered = (function($this) {
 	$r = true;
 	return $r;
 }(this));
-fr_thanadev_baalreturn_views_NodeView.__meta__ = { obj : { view : [""]}, fields : { _nodeName : { skinpart : null}, _nodeText : { skinpart : null}, _nodeContainer : { skinpart : null}, _decisionContainer : { skinpart : null}}};
+fr_thanadev_baalreturn_views_NodeView.__meta__ = { obj : { view : [""]}, fields : { _nodeName : { skinpart : null}, _nodeText : { skinpart : null}, _nodeLog : { skinpart : null}, _nodeContainer : { skinpart : null}, _decisionContainer : { skinpart : null}}};
 fr_thanadev_baalreturn_views_NodeView.__registered = (function($this) {
 	var $r;
 	{
