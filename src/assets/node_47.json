@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Leef tentait tant bien que mal de persuader notre héros qu’ils arriveront au bout de cette aventure, qu’ils réussiront à ramener la paix sur Azazelia. Un craquement retentit dans les ténèbres qui fit sursauter nos deux héros.<br>Je me retourne en direction du bruit. J'aperçois de minuscules lucioles s’approchant dans la pénombre.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"“Sortez ! Lâche !”",
+      "_message":"",
+      "_targetNodeId":48,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

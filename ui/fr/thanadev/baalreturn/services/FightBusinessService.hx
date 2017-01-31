@@ -55,7 +55,7 @@ class FightBusinessService {
         initFightService();
 
         if (isPlayerDead) {
-            fightEndSignal.dispatch(13);
+            fightEndSignal.dispatch(51);
         } else {
             fightEndSignal.dispatch(_victoryNodeIndex);
         }

@@ -560,6 +560,20 @@ fr_thanadev_baalreturn_classes_patterns_EnemyPattern.prototype = {
 	}
 	,__class__: fr_thanadev_baalreturn_classes_patterns_EnemyPattern
 };
+var fr_thanadev_baalreturn_classes_patterns_BaalPattern = function() {
+	fr_thanadev_baalreturn_classes_patterns_EnemyPattern.call(this);
+};
+$hxClasses["fr.thanadev.baalreturn.classes.patterns.BaalPattern"] = fr_thanadev_baalreturn_classes_patterns_BaalPattern;
+fr_thanadev_baalreturn_classes_patterns_BaalPattern.__name__ = ["fr","thanadev","baalreturn","classes","patterns","BaalPattern"];
+fr_thanadev_baalreturn_classes_patterns_BaalPattern.__super__ = fr_thanadev_baalreturn_classes_patterns_EnemyPattern;
+fr_thanadev_baalreturn_classes_patterns_BaalPattern.prototype = $extend(fr_thanadev_baalreturn_classes_patterns_EnemyPattern.prototype,{
+	execute: function() {
+		var attack = new fr_thanadev_baalreturn_classes_actions_DamageAction("player",10);
+		fr_thanadev_baalreturn_services_LoggerService.getInstance().log("Cet être terrible vous prend pour un jouet. Il vous assène un petit coup qui vous fait perdre 10 points de vie !");
+		attack.run();
+	}
+	,__class__: fr_thanadev_baalreturn_classes_patterns_BaalPattern
+});
 var fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern = function() {
 	fr_thanadev_baalreturn_classes_patterns_EnemyPattern.call(this);
 };
@@ -573,6 +587,34 @@ fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern.prototype = $extend(fr
 		attack.run();
 	}
 	,__class__: fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern
+});
+var fr_thanadev_baalreturn_classes_patterns_DemonsGroupPattern = function() {
+	fr_thanadev_baalreturn_classes_patterns_EnemyPattern.call(this);
+};
+$hxClasses["fr.thanadev.baalreturn.classes.patterns.DemonsGroupPattern"] = fr_thanadev_baalreturn_classes_patterns_DemonsGroupPattern;
+fr_thanadev_baalreturn_classes_patterns_DemonsGroupPattern.__name__ = ["fr","thanadev","baalreturn","classes","patterns","DemonsGroupPattern"];
+fr_thanadev_baalreturn_classes_patterns_DemonsGroupPattern.__super__ = fr_thanadev_baalreturn_classes_patterns_EnemyPattern;
+fr_thanadev_baalreturn_classes_patterns_DemonsGroupPattern.prototype = $extend(fr_thanadev_baalreturn_classes_patterns_EnemyPattern.prototype,{
+	execute: function() {
+		var attack = new fr_thanadev_baalreturn_classes_actions_DamageAction("player",3);
+		fr_thanadev_baalreturn_services_LoggerService.getInstance().log("Le groupe lance une attaque synchronisée, mais Leef vous protège en partie. Vous perdez 3 points de vie");
+		attack.run();
+	}
+	,__class__: fr_thanadev_baalreturn_classes_patterns_DemonsGroupPattern
+});
+var fr_thanadev_baalreturn_classes_patterns_FairySoldierPattern = function() {
+	fr_thanadev_baalreturn_classes_patterns_EnemyPattern.call(this);
+};
+$hxClasses["fr.thanadev.baalreturn.classes.patterns.FairySoldierPattern"] = fr_thanadev_baalreturn_classes_patterns_FairySoldierPattern;
+fr_thanadev_baalreturn_classes_patterns_FairySoldierPattern.__name__ = ["fr","thanadev","baalreturn","classes","patterns","FairySoldierPattern"];
+fr_thanadev_baalreturn_classes_patterns_FairySoldierPattern.__super__ = fr_thanadev_baalreturn_classes_patterns_EnemyPattern;
+fr_thanadev_baalreturn_classes_patterns_FairySoldierPattern.prototype = $extend(fr_thanadev_baalreturn_classes_patterns_EnemyPattern.prototype,{
+	execute: function() {
+		var attack = new fr_thanadev_baalreturn_classes_actions_DamageAction("player",5);
+		fr_thanadev_baalreturn_services_LoggerService.getInstance().log("La fée vous attaque avec son couteau. Vous perdez 5 points de vie.");
+		attack.run();
+	}
+	,__class__: fr_thanadev_baalreturn_classes_patterns_FairySoldierPattern
 });
 var fr_thanadev_baalreturn_dao_NodeDao = function() {
 };
@@ -624,6 +666,15 @@ fr_thanadev_baalreturn_services_EnemyService.prototype = {
 		switch(enemyId) {
 		case 1:
 			this._enemy = new fr_thanadev_baalreturn_classes_Enemy("Soldat de la corruption",100,new fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern(),"img/enemies/baalMinion.jpg");
+			break;
+		case 2:
+			this._enemy = new fr_thanadev_baalreturn_classes_Enemy("Soldat fée",50,new fr_thanadev_baalreturn_classes_patterns_FairySoldierPattern(),"img/enemies/baalMinion.jpg");
+			break;
+		case 3:
+			this._enemy = new fr_thanadev_baalreturn_classes_Enemy("Groupe de démons",100,new fr_thanadev_baalreturn_classes_patterns_DemonsGroupPattern(),"img/enemies/baalMinion.jpg");
+			break;
+		case 4:
+			this._enemy = new fr_thanadev_baalreturn_classes_Enemy("Baal",100,new fr_thanadev_baalreturn_classes_patterns_BaalPattern(),"img/enemies/baalMinion.jpg");
 			break;
 		}
 		this.enemyLoaded.dispatch(this.get__enemy());

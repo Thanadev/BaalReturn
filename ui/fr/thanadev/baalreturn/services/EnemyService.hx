@@ -1,5 +1,8 @@
 package fr.thanadev.baalreturn.services;
 
+import fr.thanadev.baalreturn.classes.patterns.BaalPattern;
+import fr.thanadev.baalreturn.classes.patterns.DemonsGroupPattern;
+import fr.thanadev.baalreturn.classes.patterns.FairySoldierPattern;
 import fr.thanadev.baalreturn.classes.patterns.EnemyPattern;
 import fr.thanadev.baalreturn.classes.patterns.BaseMinionPattern;
 import msignal.Signal.Signal1;
@@ -35,6 +38,12 @@ class EnemyService {
         switch (enemyId) {
             case 1:
                 _enemy = new Enemy("Soldat de la corruption", 100, new BaseMinionPattern(), "img/enemies/baalMinion.jpg");
+            case 2:
+                _enemy = new Enemy("Soldat fée", 50, new FairySoldierPattern(), "img/enemies/baalMinion.jpg");
+            case 3:
+                _enemy = new Enemy("Groupe de démons", 100, new DemonsGroupPattern(), "img/enemies/baalMinion.jpg");
+            case 4:
+                _enemy = new Enemy("Baal", 100, new BaalPattern(), "img/enemies/baalMinion.jpg");
         }
 
         enemyLoaded.dispatch(_enemy);

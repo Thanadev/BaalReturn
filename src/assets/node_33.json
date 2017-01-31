@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Nos deux héros pénètrent dans le donjon. Il tombe nez à nez avec un des chefs de l'armée du Seigneur de la Corruption. Le monstre dit avec un voix pleine d'assurance : “Vous n’arriverez jamais au bout de votre périple Sylvains ! La Corruption est partout ! Le Seigneur Baal vous détruira si je n'en suis pas capable !”",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Se préparer au combat",
+      "_message":"",
+      "_targetNodeId":34,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

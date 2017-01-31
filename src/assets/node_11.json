@@ -8,10 +8,14 @@
   "_decisions":[
     {
       "index":0,
-      "_text":"",
-      "_message":"",
-      "_targetNodeId":12,
+      "_text":"Frapper le monstre",
+      "_message":"Vous frappez l'ennemi, lui infligeant 10 points de dommages",
+      "_targetNodeId":null,
       "_actions":[
+        {
+          "_target":"enemy",
+          "_damages":10
+        }
       ]
     }
   ],

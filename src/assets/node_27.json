@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Nos deux héros victorieux s’approchent de plus en plus de la tour. Ils seront bientôt à l’entrée du donjon. Bientôt ils seront nez à nez avec le Seigneur de la Destruction.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Continuer à avancer",
+      "_message":"",
+      "_targetNodeId":28,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

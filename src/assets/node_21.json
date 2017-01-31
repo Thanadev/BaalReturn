@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Le capitaine dit :”Veuillez excuser mes soldats ils peuvent être stupides. Il faut les comprendre ce n’est pas tous les jours que l’on voit des Sylains. Pour eux vous êtes rares et donc précieux. Veuillez accepter mes sincères excuses.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Accepter ces excuses",
+      "_message":"",
+      "_targetNodeId":22,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

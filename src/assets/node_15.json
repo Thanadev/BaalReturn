@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Toute la troupe se retourne d’un bond, les combattants se stoppent. Ils avancent d’un seul groupe. Le capitaine s’avance d’un pas de plus et dit : “Que voulez vous Sylvain ?”",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"“Nous devons aller sur Chaophelia”",
+      "_message":"",
+      "_targetNodeId":16,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Le démon éclate de joie : “Ahahaha ! Parfait !” Le démon s'élève dans les airs, fait des signes. Un halo de lumière se dessine autour du démon et des deux sylvains. La lumière s’estompe peu à peu et le démon redescend sur le sol et dit : “Voici mon énigme :Nous sommes deux soeurs : La première engendre la seconde et la seconde engendre la première. Qui sommes-nous ? “",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"“Le jour et la nuit”",
+      "_message":"",
+      "_targetNodeId":32,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Vous rentrez dans les Terres Arides, théâtre de la désolation des deux Grandes Guerres. On peut voir la Corruption émaner du sol détruisant toute vie qui essaye d’y naître.<br>“C’est la première fois que je vois ce triste spectacle. J’avais entendu toutes sortes d’histoires sur les Guerres mais je ne m’attendais pas à ça…”<br>Leef avait le regard vide comme s’il revivait les souvenirs de son passé.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Continuer",
+      "_message":"",
+      "_targetNodeId":24,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

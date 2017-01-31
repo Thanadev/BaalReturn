@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Nous prenons l'assaillant en otage, Leef le tient en bouclier humain pendant que je crochète la serrure des quartier du capitaine.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Entrer",
+      "_message":"",
+      "_targetNodeId":20,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

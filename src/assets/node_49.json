@@ -1,0 +1,24 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Leef tentait tant bien que mal de persuader notre héros qu’ils arriveront au bout de cette aventure, qu’ils réussiront à ramener la paix sur Azazelia. Un craquement retentit dans les ténèbres qui fit sursauter nos deux héros.<br>Je me retourne en direction du bruit. J'aperçois de minuscules lucioles s’approchant dans la pénombre.",
+  "_nextNodeIndex":50,
+  "_enemyId":4,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Frapper de toutes tes forces le Seigneur de la Corruption",
+      "_message":"Il ne ressent pas grand chose, mais tu le blesses quand même",
+      "_targetNodeId":null,
+      "_actions":[
+        {
+          "_target":"enemy",
+          "_damages":40
+        }
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}
