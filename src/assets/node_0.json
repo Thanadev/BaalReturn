@@ -1,6 +1,8 @@
 {
   "index":0,
-  "_text":"Choisir sa classe",
+  "_imageUrl":"img/classes.png",
+  "_title":"Le premier choix",
+  "_text":"Choisissez votre classe",
   "_nextNodeIndex":null,
   "_enemyId":null,
   "_decisions":[
@@ -54,7 +56,7 @@
     },
     {
       "index":0,
-      "_text":"Prêtre",
+      "_text":"PrÃªtre",
       "_message":"",
       "_targetNodeId":3,
       "_actions":[

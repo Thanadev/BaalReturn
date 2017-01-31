@@ -51,6 +51,8 @@ class MainView extends HTMLComponent {
             node.addDecision(PlayerService.getPlayer()._class._decision);
         }
 
+        var nodeImage = new JQuery("#nodeImage");
+        nodeImage.attr("src", node._imageUrl);
         _nodes.push(node);
         _currentNode++;
 
@@ -65,6 +67,9 @@ class MainView extends HTMLComponent {
     public function enemyLoadedHandler(enemy:Enemy) {
         _enemyView.visible = true;
         _enemyView.setModel(enemy);
+
+        var nodeImage = new JQuery("#nodeImage");
+        nodeImage.attr("src", enemy._imageUrl);
     }
 
     private function initNodes() {

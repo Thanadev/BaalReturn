@@ -1,0 +1,40 @@
+body {
+    background-image: url("../img/scroll.jpg");
+}
+
+.sideToSide {
+    display: inline-block;
+}
+
+#nodeLog {
+    margin-left: 25%;
+    width: 50%;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+img {
+    max-height: 300px;
+}
+
+#secondPart {
+    width: 59%;
+}
+
+#playerView {
+    width: 39%;
+    display: inline-block;
+    border: solid 1px black;
+    vertical-align: top;
+}
+
+#nodeFirstPart {
+    width: 39%;
+}
+
+#nodeSecondPart {
+    width: 59%;
+}

@@ -62,6 +62,10 @@ class NodeView extends HTMLComponent {
 
     public function updateView():Void {
         // Node Text
+        var titleCont = new JQuery("#nodeName");
+        titleCont.text(_model._title);
+
+        // Node Text
         var textCont = new JQuery("#nodeText");
         textCont.text(_model._text);
 

@@ -1,6 +1,8 @@
 {
   "index":13,
-  "_text":"Vous êtes mort",
+  "_imageUrl":"img/classes.png",
+  "_title":"Rekt",
+  "_text":"Vous Ãªtes mort",
   "_nextNodeIndex":null,
   "_enemyId":null,
   "_decisions":[

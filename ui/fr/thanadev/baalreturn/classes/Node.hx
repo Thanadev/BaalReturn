@@ -18,12 +18,15 @@ class Node {
     @:isVar public var _text(get, null):String;
     @:isVar public var _nextNodeIndex(get, null):Int;
     @:isVar public var _enemyId(get, null):Int;
+    @:isVar public var _imageUrl(get, set):String;
+    @:isVar public var _title(get, null):String;
 
-    public function new(index:Int, text:String) {
+    public function new(index:Int, title:String, text:String) {
         modelUpdatedSignal = new Signal0();
         nextNodeChosen = new Signal1<Int>();
 
         this.index = index;
+        _title = title;
         _text = text;
         _decisions = new Array<Decision>();
         _actions = new Array<Action>();
@@ -31,7 +34,8 @@ class Node {
 
     public static function fromJson(json:String):Node {
         var parsed:Dynamic = Json.parse(json);
-        var node = new Node(parsed.index, parsed._text);
+        var node = new Node(parsed.index, parsed._title, parsed._text);
+        node._imageUrl = parsed._imageUrl;
 
         for (i in 0...parsed._decisions.length) {
             var array = cast(parsed._decisions, Array<Dynamic>);
@@ -102,5 +106,19 @@ class Node {
 
     function get__enemyId():Int {
         return _enemyId;
+    }
+
+    function set__imageUrl(value:String) {
+        this._imageUrl = value;
+        modelUpdatedSignal.dispatch();
+        return this._imageUrl;
+    }
+
+    function get__imageUrl():String {
+        return _imageUrl;
+    }
+
+    function get__title():String {
+        return _title;
     }
 }

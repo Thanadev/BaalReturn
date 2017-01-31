@@ -305,9 +305,10 @@ fr_thanadev_baalreturn_classes_Decision.prototype = {
 	}
 	,__class__: fr_thanadev_baalreturn_classes_Decision
 };
-var fr_thanadev_baalreturn_classes_Enemy = function(name,health,pattern) {
+var fr_thanadev_baalreturn_classes_Enemy = function(name,health,pattern,imageUrl) {
 	fr_thanadev_baalreturn_classes_Damageable.call(this,name,health);
 	this._pattern = pattern;
+	this._imageUrl = imageUrl;
 };
 $hxClasses["fr.thanadev.baalreturn.classes.Enemy"] = fr_thanadev_baalreturn_classes_Enemy;
 fr_thanadev_baalreturn_classes_Enemy.__name__ = ["fr","thanadev","baalreturn","classes","Enemy"];
@@ -324,12 +325,16 @@ fr_thanadev_baalreturn_classes_Enemy.prototype = $extend(fr_thanadev_baalreturn_
 	,get__pattern: function() {
 		return this._pattern;
 	}
+	,get__imageUrl: function() {
+		return this._imageUrl;
+	}
 	,__class__: fr_thanadev_baalreturn_classes_Enemy
 });
-var fr_thanadev_baalreturn_classes_Node = function(index,text) {
+var fr_thanadev_baalreturn_classes_Node = function(index,title,text) {
 	this.modelUpdatedSignal = new msignal_Signal0();
 	this.nextNodeChosen = new msignal_Signal1();
 	this.index = index;
+	this._title = title;
 	this._text = text;
 	this._decisions = [];
 	this._actions = [];
@@ -338,7 +343,8 @@ $hxClasses["fr.thanadev.baalreturn.classes.Node"] = fr_thanadev_baalreturn_class
 fr_thanadev_baalreturn_classes_Node.__name__ = ["fr","thanadev","baalreturn","classes","Node"];
 fr_thanadev_baalreturn_classes_Node.fromJson = function(json) {
 	var parsed = JSON.parse(json);
-	var node = new fr_thanadev_baalreturn_classes_Node(parsed.index,parsed._text);
+	var node = new fr_thanadev_baalreturn_classes_Node(parsed.index,parsed._title,parsed._text);
+	node.set__imageUrl(parsed._imageUrl);
 	var _g1 = 0;
 	var _g = parsed._decisions.length;
 	while(_g1 < _g) {
@@ -406,6 +412,17 @@ fr_thanadev_baalreturn_classes_Node.prototype = {
 	,get__enemyId: function() {
 		return this._enemyId;
 	}
+	,set__imageUrl: function(value) {
+		this._imageUrl = value;
+		this.modelUpdatedSignal.dispatch();
+		return this.get__imageUrl();
+	}
+	,get__imageUrl: function() {
+		return this._imageUrl;
+	}
+	,get__title: function() {
+		return this._title;
+	}
 	,__class__: fr_thanadev_baalreturn_classes_Node
 };
 var fr_thanadev_baalreturn_classes_Player = function(name,health) {
@@ -428,26 +445,32 @@ var fr_thanadev_baalreturn_classes_PlayerClass = function(type) {
 	case "reaper":
 		this._decision = new fr_thanadev_baalreturn_classes_Decision("Reaper attack",null,"");
 		this.get__decision().usableOnlyInBattle = true;
+		this._imageUrl = "img/classes/reaper.jpg";
 		break;
 	case "rogue":
 		this._decision = new fr_thanadev_baalreturn_classes_Decision("Rogue attack",null,"");
 		this.get__decision().usableOnlyInBattle = true;
+		this._imageUrl = "img/classes/rogue.jpg";
 		break;
 	case "priest":
 		this._decision = new fr_thanadev_baalreturn_classes_Decision("Priest attack",null,"");
 		this.get__decision().usableOnlyInBattle = true;
+		this._imageUrl = "img/classes/priest.jpg";
 		break;
 	case "ranger":
 		this._decision = new fr_thanadev_baalreturn_classes_Decision("Ranger attack",null,"");
 		this.get__decision().usableOnlyInBattle = true;
+		this._imageUrl = "img/classes/ranger.jpg";
 		break;
 	case "magus":
 		this._decision = new fr_thanadev_baalreturn_classes_Decision("Magus attack",null,"");
 		this.get__decision().usableOnlyInBattle = true;
+		this._imageUrl = "img/classes/magus.jpg";
 		break;
 	case "warrior":
 		this._decision = new fr_thanadev_baalreturn_classes_Decision("Warrior attack",null,"");
 		this.get__decision().usableOnlyInBattle = true;
+		this._imageUrl = "img/classes/warrior.jpg";
 		break;
 	default:
 		console.log("You fool !");
@@ -458,6 +481,9 @@ fr_thanadev_baalreturn_classes_PlayerClass.__name__ = ["fr","thanadev","baalretu
 fr_thanadev_baalreturn_classes_PlayerClass.prototype = {
 	get__decision: function() {
 		return this._decision;
+	}
+	,get__imageUrl: function() {
+		return this._imageUrl;
 	}
 	,__class__: fr_thanadev_baalreturn_classes_PlayerClass
 };
@@ -574,7 +600,7 @@ fr_thanadev_baalreturn_dao_NodeDao.prototype = {
 };
 var fr_thanadev_baalreturn_services_EnemyService = function(enemyName,enemyHealth,pattern) {
 	this._enemy = null;
-	this._enemy = new fr_thanadev_baalreturn_classes_Enemy(enemyName,enemyHealth,pattern);
+	this._enemy = new fr_thanadev_baalreturn_classes_Enemy(enemyName,enemyHealth,pattern,"img/enemies/baalMinion.jpg");
 	this.enemyLoaded = new msignal_Signal1();
 };
 $hxClasses["fr.thanadev.baalreturn.services.EnemyService"] = fr_thanadev_baalreturn_services_EnemyService;
@@ -597,7 +623,7 @@ fr_thanadev_baalreturn_services_EnemyService.prototype = {
 	generateEnemyFromId: function(enemyId) {
 		switch(enemyId) {
 		case 1:
-			this._enemy = new fr_thanadev_baalreturn_classes_Enemy("Soldat de la corruption",100,new fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern());
+			this._enemy = new fr_thanadev_baalreturn_classes_Enemy("Soldat de la corruption",100,new fr_thanadev_baalreturn_classes_patterns_BaseMinionPattern(),"img/enemies/baalMinion.jpg");
 			break;
 		}
 		this.enemyLoaded.dispatch(this.get__enemy());
@@ -896,6 +922,8 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 		fr_thanadev_baalreturn_services_LoggerService.getInstance().clearArea();
 		node.nextNodeChosen.add($bind(this,this.loadNode));
 		if(node.get__enemyId() != null && node.get__enemyId() > 0) node.addDecision(fr_thanadev_baalreturn_services_PlayerService.getPlayer().get__class().get__decision());
+		var nodeImage = js.JQuery("#nodeImage");
+		nodeImage.attr("src",node.get__imageUrl());
 		this._nodes.push(node);
 		this._currentNode++;
 		if(this._skinPartsAttached) this.skinTimeoutHandler(); else {
@@ -906,6 +934,8 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 	,enemyLoadedHandler: function(enemy) {
 		this._enemyView.set_visible(true);
 		this._enemyView.setModel(enemy);
+		var nodeImage = js.JQuery("#nodeImage");
+		nodeImage.attr("src",enemy.get__imageUrl());
 	}
 	,initNodes: function() {
 		this._nodes = [];
@@ -921,7 +951,7 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 		this._loader.loadNode(nodeIndex,$bind(this,this.nodeLoadedHandler));
 	}
 	,getView: function() {
-		return "<div>\r\n    <fr-thanadev-baalreturn-views-playerview data-id=\"_playerView\" style=\"display: inline-block; border: solid 1px black\"></fr-thanadev-baalreturn-views-playerview>\r\n    <fr-thanadev-baalreturn-views-enemyview data-id=\"_enemyView\" style=\"display: inline-block; border: solid 1px black\"></fr-thanadev-baalreturn-views-enemyview>\r\n</div>\r\n<fr-thanadev-baalreturn-views-nodeview data-id=\"_nodeView\"></fr-thanadev-baalreturn-views-nodeview>";
+		return "<section>\r\n    <fr-thanadev-baalreturn-views-playerview data-id=\"_playerView\" id=\"playerView\"></fr-thanadev-baalreturn-views-playerview>\r\n    <div id=\"secondPart\" class=\"sideToSide\">\r\n        <fr-thanadev-baalreturn-views-enemyview data-id=\"_enemyView\" id=\"enemyView\" style=\"border: solid 1px black\"></fr-thanadev-baalreturn-views-enemyview>\r\n        <img src=\"\" alt=\"\" id=\"nodeImage\"/>\r\n    </div>\r\n</section>\r\n<section>\r\n    <fr-thanadev-baalreturn-views-nodeview data-id=\"_nodeView\"></fr-thanadev-baalreturn-views-nodeview>\r\n</section>";
 	}
 	,__class__: fr_thanadev_baalreturn_views_MainView
 });
@@ -957,6 +987,8 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 		this._model.get__decisions()[Std.parseInt(id)].run();
 	}
 	,updateView: function() {
+		var titleCont = js.JQuery("#nodeName");
+		titleCont.text(this._model.get__title());
 		var textCont = js.JQuery("#nodeText");
 		textCont.text(this._model.get__text());
 		var cont = js.JQuery("#decisionContainer");
@@ -978,7 +1010,7 @@ fr_thanadev_baalreturn_views_NodeView.prototype = $extend(org_tamina_html_compon
 		logArea.text(message);
 	}
 	,getView: function() {
-		return "<div data-id=\"_nodeContainer\">\r\n    <h2 data-id=\"_nodeName\">Node Name</h2>\r\n    <p id=\"nodeText\" data-id=\"_nodeText\">Node Text</p>\r\n    <p id=\"nodeLog\" data-id=\"_nodeLog\"></p>\r\n    <div id=\"decisionContainer\" data-id=\"_decisionContainer\">\r\n\r\n    </div>\r\n</div>";
+		return "<p id=\"nodeLog\" data-id=\"_nodeLog\"></p>\r\n<div data-id=\"_nodeContainer\">\r\n    <div class=\"sideToSide\" id=\"nodeFirstPart\">\r\n        <h2 id=\"nodeName\" data-id=\"_nodeName\">Node Name</h2>\r\n        <p id=\"nodeText\" data-id=\"_nodeText\">Node Text</p>\r\n    </div>\r\n    <div class=\"sideToSide\" id=\"nodeSecondPart\">\r\n        <p>Qu'allez vous faire ?</p>\r\n        <div id=\"decisionContainer\" data-id=\"_decisionContainer\">\r\n        </div>\r\n    </div>\r\n</div>";
 	}
 	,__class__: fr_thanadev_baalreturn_views_NodeView
 });
@@ -1004,9 +1036,13 @@ fr_thanadev_baalreturn_views_PlayerView.prototype = $extend(org_tamina_html_comp
 	,updateView: function() {
 		this._playerName.innerText = this._model.get_name();
 		this._playerLife.innerText = Std.string(this._model.get_health());
+		if(this._model.get__class() != null) {
+			var nodeImage = js.JQuery("#playerImg");
+			nodeImage.attr("src",this._model.get__class().get__imageUrl());
+		}
 	}
 	,getView: function() {
-		return "<div data-id=\"_nodeContainer\">\r\n    <h2 data-id=\"_playerName\">Player Name</h2>\r\n    <p>PV : <span data-id=\"_playerLife\"></span></p>\r\n</div>";
+		return "<div>\r\n    <h2 data-id=\"_playerName\">Player Name</h2>\r\n    <p>PV : <span data-id=\"_playerLife\"></span></p>\r\n</div>\r\n<img src=\"\" alt=\"\" id=\"playerImg\"/>";
 	}
 	,__class__: fr_thanadev_baalreturn_views_PlayerView
 });

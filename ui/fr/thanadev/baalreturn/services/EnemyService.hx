@@ -34,14 +34,14 @@ class EnemyService {
     public function generateEnemyFromId(enemyId:Int) {
         switch (enemyId) {
             case 1:
-                _enemy = new Enemy("Soldat de la corruption", 100, new BaseMinionPattern());
+                _enemy = new Enemy("Soldat de la corruption", 100, new BaseMinionPattern(), "img/enemies/baalMinion.jpg");
         }
 
         enemyLoaded.dispatch(_enemy);
     }
 
     private function new(enemyName:String, enemyHealth:Float, pattern:EnemyPattern) {
-        _enemy = new Enemy(enemyName, enemyHealth, pattern);
+        _enemy = new Enemy(enemyName, enemyHealth, pattern, "img/enemies/baalMinion.jpg");
         enemyLoaded = new Signal1<Enemy>();
     }
 

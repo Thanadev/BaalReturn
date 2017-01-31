@@ -1,6 +1,8 @@
 {
   "index":0,
-  "_text":"Node 1 qui est chargé ! C'est cool",
+  "_imageUrl":"img/classes.png",
+  "_title":"3",
+  "_text":"Oups",
   "_nextNodeIndex":null,
   "_enemyId":null,
   "_decisions":[

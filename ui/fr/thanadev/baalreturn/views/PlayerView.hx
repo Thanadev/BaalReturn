@@ -37,5 +37,10 @@ class PlayerView extends HTMLComponent {
     public function updateView():Void {
         _playerName.innerText = _model.name;
         _playerLife.innerText = Std.string(_model.health);
+
+        if (_model._class != null) {
+            var nodeImage = new JQuery("#playerImg");
+            nodeImage.attr("src", _model._class._imageUrl);
+        }
     }
 }
