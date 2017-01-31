@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Vous vous dirigez vers la deuxième colonne de fumée à la recherche des démons de Baal les instigateurs de la Corruption...",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Marcher ",
+      "_message":"",
+      "_targetNodeId":9,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Nous sommes dans une grande et luxueuse pièce. Le capitaine assis sur son trône s’exclame: “Qu’est ce qu’il se passe ici ?! “ ",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"“Votre équipage à chercher à nous dérober! Nous nous sommes défendu et avons pris celui la otage pour protéger nos vies.” ",
+      "_message":"",
+      "_targetNodeId":21,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

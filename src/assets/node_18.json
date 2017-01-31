@@ -1,0 +1,24 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"Combat",
+  "_text":"",
+  "_nextNodeIndex":19,
+  "_enemyId":2,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Frappez le monstre",
+      "_message":"Vous frappez l'ennemi, lui infligeant 10 points de dommages",
+      "_targetNodeId":null,
+      "_actions":[
+        {
+          "_target":"enemy",
+          "_damages":10
+        }
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

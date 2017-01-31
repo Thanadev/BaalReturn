@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"C’est bien votre jour de chance on dirait mes petites brindilles, d’un air malicieux. Nous avons justement une affaire à régler là-bas. Nous pouvons vous emmenez. ",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"“Merci” ",
+      "_message":"",
+      "_targetNodeId":17,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

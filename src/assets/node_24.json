@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Vous passez à côté de ruines quand vous entendez des grognements. Un groupe de trois démons rodent.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Attaquer par surprise",
+      "_message":"",
+      "_targetNodeId":25,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Le bateau accoste. Nos deux débarquent sur la terre ferme. Au centre l'île on peut voir la Tour du Chaos et au dessus un amas de magie en concentration. Il n’y a plus qu’un désert de cendre et de chaos qui sépare nos deux héros de la vérité. Nous nous hâtons en direction de la tour. ",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Aller en direction de la Tour ",
+      "_message":"",
+      "_targetNodeId":23,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_nextNodeIndex":null,
+  "_text":"Le démon répond en salivant : “Je veux votre énergie vitale ! Mais malheureusement je ne peux quitter mon poste pour vous dévorez… Faisons un pacte. Répondez à mon énigme et vous pourrez passer. Mais si vous vous trompez vous m'offrirez une part de votre délicieuse énergie” dit-il d’un ton maléfique.",
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Accepter le pacte",
+      "_message":"",
+      "_targetNodeId":31,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

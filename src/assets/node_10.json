@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Leef ouvre la porte, vous surgissez dans la maison. Un démon est en train dévorer un humain.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Attaquer ",
+      "_message":"",
+      "_targetNodeId":11,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

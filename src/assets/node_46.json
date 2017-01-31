@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_nextNodeIndex":null,
+  "_text":"Vous avancez doucement dans l’obscurité. Pas à pas nos deux héros s’approche de l’ultime étape de leur périple. Terrifiés de ce qui peut bien les attendre à l’autre côté. Je suis à l'affût, je regarde de tous les côtés à la recherche de notre ennemi. Leef dit en voyant le jeune héros paniqué: “Nous sommes arrivés jusqu’ici nous n’allons pas nous arrêter là. Nous vaincrons le mal !” ",
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Continuer d’avancer dans la pénombre",
+      "_message":"",
+      "_targetNodeId":47,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_nextNodeIndex":null,
+  "_text":"Les deux sylvains ce sont arrêté. Leurs armes dégainés, en posture de combat. Un flash de lumière sort de l’obscurité aveuglant nos deux héros les laissant juste apercevoir la silhouette du Seigneur de la Corruption, Baal. Le démon bondit sur nous deux héros en lâchant un effroyable grognement et dit: “ Tremblez devant mon courou je vais détruire les Elfes et toute les sous races qui les accompagnent ! Vous êtes peut-être parvenu jusqu’à moi mais votre histoire s’arrêtent ici et maintenant !”",
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Attaquer.",
+      "_message":"",
+      "_targetNodeId":49,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

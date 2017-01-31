@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Leef répond : “Cela me rappelle de mauvais souvenir… une ère révolue.” Il fait quelque pas en s’éloignant du puit. S’arrête, se dresse, se concentre. Son corps commence à s’illuminer d’une forte lumière verdâtre… Il tend ses bras vers le ciel, concentre son énergie dans ces bras puis il enfonce des bras dans le sol. La lumière de plus en plus instance… D’un coup dans un gras fracas il retire et ses bras du sol et s'écrie  “Non ! Nooon ! C’est impossible ! Elle ne peut pas être de retour, nous l’avons éradiqué de ce monde ... “",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"“ Leef qu’as tu sentis ?! Mais bordel de merde qu’est ce qui se passe ici ?!?!?!” ",
+      "_message":"",
+      "_targetNodeId":7,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

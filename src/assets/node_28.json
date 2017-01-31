@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Vous arrivez au pied de la Tour. Un démon supérieur garde la Tour, il ne semble pas vous avoir remarqué.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Foncer dans le tas",
+      "_message":"",
+      "_targetNodeId":29,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

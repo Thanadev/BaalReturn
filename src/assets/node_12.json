@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Leef: “Tu as été vaillant dans ce combat ! Il faut croire que les rumeurs sont fondées finalement. J’honore ta bravoure et te convie à te joindre à moi pour découvrir ce qu’il se trame derrière toutes ces mystérieuses attaques et le retour de la Corruption.”",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"“Je serais digne de la légende et t’aiderais à vaincre ce mal!” ",
+      "_message":"",
+      "_targetNodeId":13,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

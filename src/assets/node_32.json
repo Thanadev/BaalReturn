@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_nextNodeIndex":null,
+  "_text":"Le démon fou de rage s’exclame : “Comment est-ce possible ?! Je ne peux pas perdre ! C’est impossible ! “ Leef répond : “Tu es lié par le pacte démon ! Laisse nous passer !” Le démon lâche un grognement rauque de rage et fait des signes des mains. La barrière magique s’ouvre, nos deux héros s’y engouffre et avance jusqu'à la grande porte noir. Le démon retournant à son poste dit en ricanant : “Vous ne sortirez jamais vivant de cette tour. Mon maître est sans pitié.” ",
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Entrer dans le donjon",
+      "_message":"",
+      "_targetNodeId":33,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}
