@@ -1,0 +1,28 @@
+{
+  "index":1,
+  "_imageUrl":"img/classes.png",
+  "_title":"1",
+  "_text":"Une attaque surprise !",
+  "_nextNodeIndex":2,
+  "_enemyId":1,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Attaque basique",
+      "_message":"Vous attaquez le monstre comme vous le pouvez",
+      "_targetNodeId":null,
+      "_actions":[
+        {
+          "_target":"enemy",
+          "_damages":10
+        }
+      ]
+    }
+  ],
+  "_actions":[
+    {
+      "_target":"player",
+      "_damages":10
+    }
+  ]
+}

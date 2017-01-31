@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Leef répond difficilement : “ La Corruption…elle est de retour.” Tu …. blablabla ...Il se relève se tourne vers la côte et dit : “Nous devons continuer, suis moi.”",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Se relever et suivre Leef.",
+      "_message":"",
+      "_targetNodeId":8,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Vous vous approchez du puit en continuant à regarder autour de vous à la recherche d’âmes qui vivent. Tu te penches sur le puit et regarde à l’intérieur. Tu aperçois le corps inerte d’un humain qui flotte à la surface. Tu fais un signe de la main à Leef et dit :",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Un des villageois sûrement. Il est mort. Qu’est ce qui se passe ici ?",
+      "_message":"",
+      "_targetNodeId":5,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

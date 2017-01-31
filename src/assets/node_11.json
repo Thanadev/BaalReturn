@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"Combat",
+  "_text":"",
+  "_nextNodeIndex":12,
+  "_enemyId":1,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"",
+      "_message":"",
+      "_targetNodeId":12,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

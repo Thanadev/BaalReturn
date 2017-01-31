@@ -1,81 +1,17 @@
 {
   "index":0,
   "_imageUrl":"img/classes.png",
-  "_title":"Le premier choix",
-  "_text":"Choisissez votre classe",
+  "_title":"L'aventure commence",
+  "_text":"Vous serez \"Le nouveau héros\"",
   "_nextNodeIndex":null,
   "_enemyId":null,
   "_decisions":[
     {
       "index":0,
-      "_text":"Guerrier",
+      "_text":"Commencer",
       "_message":"",
-      "_targetNodeId":3,
+      "_targetNodeId":1,
       "_actions":[
-        {
-          "_target":"player",
-          "_className":"warrior"
-        }
-      ]
-    },
-    {
-      "index":0,
-      "_text":"Mage",
-      "_message":"",
-      "_targetNodeId":3,
-      "_actions":[
-        {
-          "_target":"player",
-          "_className":"magus"
-        }
-      ]
-    },
-    {
-      "index":0,
-      "_text":"Chasseur",
-      "_message":"",
-      "_targetNodeId":3,
-      "_actions":[
-        {
-          "_target":"player",
-          "_className":"ranger"
-        }
-      ]
-    },
-    {
-      "index":0,
-      "_text":"Voleur",
-      "_message":"",
-      "_targetNodeId":3,
-      "_actions":[
-        {
-          "_target":"player",
-          "_className":"rogue"
-        }
-      ]
-    },
-    {
-      "index":0,
-      "_text":"Prêtre",
-      "_message":"",
-      "_targetNodeId":3,
-      "_actions":[
-        {
-          "_target":"player",
-          "_className":"priest"
-        }
-      ]
-    },
-    {
-      "index":0,
-      "_text":"Faucheur",
-      "_message":"",
-      "_targetNodeId":3,
-      "_actions":[
-        {
-          "_target":"player",
-          "_className":"reaper"
-        }
       ]
     }
   ],

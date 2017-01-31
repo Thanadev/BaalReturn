@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Leef tend son bras, deux lianes s’étirent de son bras en direction du corps. Il l’attrape et le remonte à la surface. Leef eu un choc en voyant le corps de cet humain déchiqueté et complètement carbonisé. Il le pose sur le sol.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"“Tu as déjà vu quelque chose ?”",
+      "_message":"",
+      "_targetNodeId":6,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

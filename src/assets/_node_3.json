@@ -1,0 +1,32 @@
+{
+  "index":0,
+  "_imageUrl":"img/classes.png",
+  "_title":"3",
+  "_text":"Oups",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Le premier choix",
+      "_message":"",
+      "_targetNodeId":1,
+      "_actions":[
+      ]
+    },
+    {
+      "index":1,
+      "_text":"Le second choix",
+      "_message":"Aie",
+      "_targetNodeId":null,
+      "_actions":[
+        {
+          "_target":"player",
+          "_damages":80
+        }
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}

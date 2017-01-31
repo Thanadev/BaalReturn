@@ -1,0 +1,20 @@
+{
+  "index":2,
+  "_imageUrl":"img/classes.png",
+  "_title":"",
+  "_text":"Vous arrivez dans un deuxième village qui est tout autant dévasté il reste juste une maison  intact. Un cri surgit de la maison.",
+  "_nextNodeIndex":null,
+  "_enemyId":null,
+  "_decisions":[
+    {
+      "index":0,
+      "_text":"Courir vers le cri",
+      "_message":"",
+      "_targetNodeId":10,
+      "_actions":[
+      ]
+    }
+  ],
+  "_actions":[
+  ]
+}
