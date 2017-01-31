@@ -257,6 +257,7 @@ var fr_thanadev_baalreturn_classes_Decision = function(text,targetNodeId,message
 	this._targetNodeId = targetNodeId;
 	this._message = message;
 	this.decisionChosen = new msignal_Signal1();
+	this.usableOnlyInBattle = false;
 };
 $hxClasses["fr.thanadev.baalreturn.classes.Decision"] = fr_thanadev_baalreturn_classes_Decision;
 fr_thanadev_baalreturn_classes_Decision.__name__ = ["fr","thanadev","baalreturn","classes","Decision"];
@@ -414,8 +415,52 @@ $hxClasses["fr.thanadev.baalreturn.classes.Player"] = fr_thanadev_baalreturn_cla
 fr_thanadev_baalreturn_classes_Player.__name__ = ["fr","thanadev","baalreturn","classes","Player"];
 fr_thanadev_baalreturn_classes_Player.__super__ = fr_thanadev_baalreturn_classes_Damageable;
 fr_thanadev_baalreturn_classes_Player.prototype = $extend(fr_thanadev_baalreturn_classes_Damageable.prototype,{
-	__class__: fr_thanadev_baalreturn_classes_Player
+	set__class: function(value) {
+		return this._class = value;
+	}
+	,get__class: function() {
+		return this._class;
+	}
+	,__class__: fr_thanadev_baalreturn_classes_Player
 });
+var fr_thanadev_baalreturn_classes_PlayerClass = function(type) {
+	switch(type) {
+	case "reaper":
+		this._decision = new fr_thanadev_baalreturn_classes_Decision("Reaper attack",null,"");
+		this.get__decision().usableOnlyInBattle = true;
+		break;
+	case "rogue":
+		this._decision = new fr_thanadev_baalreturn_classes_Decision("Rogue attack",null,"");
+		this.get__decision().usableOnlyInBattle = true;
+		break;
+	case "priest":
+		this._decision = new fr_thanadev_baalreturn_classes_Decision("Priest attack",null,"");
+		this.get__decision().usableOnlyInBattle = true;
+		break;
+	case "ranger":
+		this._decision = new fr_thanadev_baalreturn_classes_Decision("Ranger attack",null,"");
+		this.get__decision().usableOnlyInBattle = true;
+		break;
+	case "magus":
+		this._decision = new fr_thanadev_baalreturn_classes_Decision("Magus attack",null,"");
+		this.get__decision().usableOnlyInBattle = true;
+		break;
+	case "warrior":
+		this._decision = new fr_thanadev_baalreturn_classes_Decision("Warrior attack",null,"");
+		this.get__decision().usableOnlyInBattle = true;
+		break;
+	default:
+		console.log("You fool !");
+	}
+};
+$hxClasses["fr.thanadev.baalreturn.classes.PlayerClass"] = fr_thanadev_baalreturn_classes_PlayerClass;
+fr_thanadev_baalreturn_classes_PlayerClass.__name__ = ["fr","thanadev","baalreturn","classes","PlayerClass"];
+fr_thanadev_baalreturn_classes_PlayerClass.prototype = {
+	get__decision: function() {
+		return this._decision;
+	}
+	,__class__: fr_thanadev_baalreturn_classes_PlayerClass
+};
 var fr_thanadev_baalreturn_classes_actions_Action = function(target) {
 	this.requestCurrentPlayer = new msignal_Signal0();
 	this.requestCurrentEnemy = new msignal_Signal0();
@@ -425,7 +470,7 @@ $hxClasses["fr.thanadev.baalreturn.classes.actions.Action"] = fr_thanadev_baalre
 fr_thanadev_baalreturn_classes_actions_Action.__name__ = ["fr","thanadev","baalreturn","classes","actions","Action"];
 fr_thanadev_baalreturn_classes_actions_Action.fromDynamic = function(parsed) {
 	var action;
-	if(Object.prototype.hasOwnProperty.call(parsed,"_damages")) action = new fr_thanadev_baalreturn_classes_actions_DamageAction(parsed._target,parsed._damages); else action = new fr_thanadev_baalreturn_classes_actions_Action(parsed._target);
+	if(Object.prototype.hasOwnProperty.call(parsed,"_damages")) action = new fr_thanadev_baalreturn_classes_actions_DamageAction(parsed._target,parsed._damages); else if(Object.prototype.hasOwnProperty.call(parsed,"_className")) action = new fr_thanadev_baalreturn_classes_actions_ClassChoiceAction(parsed._target,parsed._className); else action = new fr_thanadev_baalreturn_classes_actions_Action(parsed._target);
 	return action;
 };
 fr_thanadev_baalreturn_classes_actions_Action.prototype = {
@@ -442,6 +487,25 @@ fr_thanadev_baalreturn_classes_actions_Action.prototype = {
 var fr_thanadev_baalreturn_classes_actions_ActionTarget = function() { };
 $hxClasses["fr.thanadev.baalreturn.classes.actions.ActionTarget"] = fr_thanadev_baalreturn_classes_actions_ActionTarget;
 fr_thanadev_baalreturn_classes_actions_ActionTarget.__name__ = ["fr","thanadev","baalreturn","classes","actions","ActionTarget"];
+var fr_thanadev_baalreturn_classes_actions_ClassChoiceAction = function(target,className) {
+	fr_thanadev_baalreturn_classes_actions_Action.call(this,target);
+	this._className = className;
+};
+$hxClasses["fr.thanadev.baalreturn.classes.actions.ClassChoiceAction"] = fr_thanadev_baalreturn_classes_actions_ClassChoiceAction;
+fr_thanadev_baalreturn_classes_actions_ClassChoiceAction.__name__ = ["fr","thanadev","baalreturn","classes","actions","ClassChoiceAction"];
+fr_thanadev_baalreturn_classes_actions_ClassChoiceAction.__super__ = fr_thanadev_baalreturn_classes_actions_Action;
+fr_thanadev_baalreturn_classes_actions_ClassChoiceAction.prototype = $extend(fr_thanadev_baalreturn_classes_actions_Action.prototype,{
+	run: function() {
+		fr_thanadev_baalreturn_services_PlayerService.choosePlayerClass(this.get__className());
+	}
+	,get__className: function() {
+		return this._className;
+	}
+	,set__className: function(value) {
+		return this._className = value;
+	}
+	,__class__: fr_thanadev_baalreturn_classes_actions_ClassChoiceAction
+});
 var fr_thanadev_baalreturn_classes_actions_DamageAction = function(target,damages) {
 	fr_thanadev_baalreturn_classes_actions_Action.call(this,target);
 	this.set__damages(damages);
@@ -621,6 +685,9 @@ fr_thanadev_baalreturn_services_PlayerService.getInstance = function(playerName,
 	if(playerName == null) playerName = "hero";
 	if(fr_thanadev_baalreturn_services_PlayerService._instance == null) fr_thanadev_baalreturn_services_PlayerService._instance = new fr_thanadev_baalreturn_services_PlayerService(playerName,playerHealth);
 	return fr_thanadev_baalreturn_services_PlayerService._instance;
+};
+fr_thanadev_baalreturn_services_PlayerService.choosePlayerClass = function(className) {
+	fr_thanadev_baalreturn_services_PlayerService._instance.get__player().set__class(new fr_thanadev_baalreturn_classes_PlayerClass(className));
 };
 fr_thanadev_baalreturn_services_PlayerService.getPlayer = function() {
 	return fr_thanadev_baalreturn_services_PlayerService._instance.get__player();
@@ -828,6 +895,7 @@ fr_thanadev_baalreturn_views_MainView.prototype = $extend(org_tamina_html_compon
 	,nodeLoadedHandler: function(node) {
 		fr_thanadev_baalreturn_services_LoggerService.getInstance().clearArea();
 		node.nextNodeChosen.add($bind(this,this.loadNode));
+		if(node.get__enemyId() != null && node.get__enemyId() > 0) node.addDecision(fr_thanadev_baalreturn_services_PlayerService.getPlayer().get__class().get__decision());
 		this._nodes.push(node);
 		this._currentNode++;
 		if(this._skinPartsAttached) this.skinTimeoutHandler(); else {
@@ -1692,6 +1760,12 @@ var q = window.jQuery;
 var js = js || {}
 js.JQuery = q;
 msignal_SlotList.NIL = new msignal_SlotList(null,null);
+fr_thanadev_baalreturn_classes_PlayerClass.REAPER = "reaper";
+fr_thanadev_baalreturn_classes_PlayerClass.ROGUE = "rogue";
+fr_thanadev_baalreturn_classes_PlayerClass.PRIEST = "priest";
+fr_thanadev_baalreturn_classes_PlayerClass.MAGUS = "magus";
+fr_thanadev_baalreturn_classes_PlayerClass.WARRIOR = "warrior";
+fr_thanadev_baalreturn_classes_PlayerClass.RANGER = "ranger";
 fr_thanadev_baalreturn_classes_actions_Action.__meta__ = { fields : { run : { 'abstract' : null}}};
 fr_thanadev_baalreturn_classes_actions_ActionTarget.PLAYER = "player";
 fr_thanadev_baalreturn_classes_actions_ActionTarget.ENEMY = "enemy";

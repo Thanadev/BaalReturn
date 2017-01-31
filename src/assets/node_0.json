@@ -1,26 +1,78 @@
 {
   "index":0,
-  "_text":"Node 1 qui est chargÃ© ! C'est cool",
+  "_text":"Choisir sa classe",
   "_nextNodeIndex":null,
   "_enemyId":null,
   "_decisions":[
     {
       "index":0,
-      "_text":"Le premier choix",
+      "_text":"Guerrier",
       "_message":"",
-      "_targetNodeId":1,
-      "_actions":[
-      ]
-    },
-    {
-      "index":1,
-      "_text":"Le second choix",
-      "_message":"Aie",
-      "_targetNodeId":null,
+      "_targetNodeId":3,
       "_actions":[
         {
           "_target":"player",
-          "_damages":80
+          "_className":"warrior"
+        }
+      ]
+    },
+    {
+      "index":0,
+      "_text":"Mage",
+      "_message":"",
+      "_targetNodeId":3,
+      "_actions":[
+        {
+          "_target":"player",
+          "_className":"magus"
+        }
+      ]
+    },
+    {
+      "index":0,
+      "_text":"Chasseur",
+      "_message":"",
+      "_targetNodeId":3,
+      "_actions":[
+        {
+          "_target":"player",
+          "_className":"ranger"
+        }
+      ]
+    },
+    {
+      "index":0,
+      "_text":"Voleur",
+      "_message":"",
+      "_targetNodeId":3,
+      "_actions":[
+        {
+          "_target":"player",
+          "_className":"rogue"
+        }
+      ]
+    },
+    {
+      "index":0,
+      "_text":"Prêtre",
+      "_message":"",
+      "_targetNodeId":3,
+      "_actions":[
+        {
+          "_target":"player",
+          "_className":"priest"
+        }
+      ]
+    },
+    {
+      "index":0,
+      "_text":"Faucheur",
+      "_message":"",
+      "_targetNodeId":3,
+      "_actions":[
+        {
+          "_target":"player",
+          "_className":"reaper"
         }
       ]
     }

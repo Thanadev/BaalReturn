@@ -11,6 +11,7 @@ import Array;
 class Decision {
     public var decisionChosen:Signal1<Int>;
     public var index:Int;
+    public var usableOnlyInBattle:Bool;
 
     @:isVar public var _text(get, null):String;
     @:isVar public var _actions(get, null):Array<Action>;
@@ -24,6 +25,7 @@ class Decision {
         _targetNodeId = targetNodeId;
         _message = message;
         decisionChosen = new Signal1<Int>();
+        usableOnlyInBattle = false;
     }
 
     public static function fromDynamic(parsed:Dynamic):Decision {

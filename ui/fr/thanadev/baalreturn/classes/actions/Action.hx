@@ -22,6 +22,8 @@ class Action {
 
         if (Reflect.hasField(parsed, "_damages")) {
             action = new DamageAction(parsed._target, parsed._damages);
+        } else if (Reflect.hasField(parsed, "_className")) {
+            action = new ClassChoiceAction(parsed._target, parsed._className);
         } else {
             action = new Action(parsed._target);
         }

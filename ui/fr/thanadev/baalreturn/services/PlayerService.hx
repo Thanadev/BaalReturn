@@ -1,5 +1,6 @@
 package fr.thanadev.baalreturn.services;
 
+import fr.thanadev.baalreturn.classes.PlayerClass;
 import fr.thanadev.baalreturn.classes.Player;
 class PlayerService {
     private static var _instance:PlayerService = null;
@@ -12,6 +13,10 @@ class PlayerService {
         }
 
         return _instance;
+    }
+
+    public static function choosePlayerClass(className:String) {
+        _instance._player._class = new PlayerClass(className);
     }
 
     public static function getPlayer():Player {

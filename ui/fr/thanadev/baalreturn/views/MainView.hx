@@ -46,6 +46,11 @@ class MainView extends HTMLComponent {
     public function nodeLoadedHandler(node:Node):Void {
         LoggerService.getInstance().clearArea();
         node.nextNodeChosen.add(loadNode);
+
+        if (node._enemyId != null && node._enemyId > 0) {
+            node.addDecision(PlayerService.getPlayer()._class._decision);
+        }
+
         _nodes.push(node);
         _currentNode++;
 
